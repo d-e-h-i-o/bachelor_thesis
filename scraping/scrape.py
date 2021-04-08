@@ -6,13 +6,13 @@ import json
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 
-random_sleep = lambda: sleep(randint(1, 5))
+random_sleep = lambda: sleep(randint(2, 7))
 
 
 def fetch_page(driver, url: str) -> Optional[str]:
     try:
         driver.get(url)
-        sleep(5)
+        sleep(10)
         return driver.page_source
     except Exception as e:
         print(e)
