@@ -60,5 +60,5 @@ if __name__ == "__main__":
             soup = LawSoup(BeautifulSoup(file.read(), "html.parser"))
             extracted_laws[file_name.split('.')[0]] = soup.extract_paragraphs()
 
-    with open("laws.json", "w+", encoding='utf8') as file:
+    with open("data/parsed_laws/laws.json", "w+", encoding='utf8') as file:
         json.dump(extracted_laws, file, ensure_ascii=False)
