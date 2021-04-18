@@ -1,15 +1,13 @@
 # Bachelor Thesis
 
-Everything is still WIP.
 ## Project Structure
-
-- `scraping/`: 
-    - `scrape.py` Scrapes all data from the urls specified in `urls/`  to `html_pages/`
-    - `extract.py` Extracts the laws from `html_pages/` to `parsed_laws/` in the [data format](#Format)
-    - `data/`
-        - `html_pages/`
-        - `parsed_laws/` 
-        - `urls/` Contains urls from [gesetze.berlin.de](gesetze.berlin.de)
+- `data/`
+    - `html_pages/` The raw html_pages that were scraped by `scrape.py`
+    - `parsed_laws/` The ouput from `extract.py`
+    - `urls/` Contains urls from [gesetze.berlin.de](gesetze.berlin.de) for all [coronavirus laws in Berlin](https://de.wikipedia.org/wiki/SARS-CoV-2-Verordnungen_in_Berlin)
+- `scripts/`: 
+    - `scrape.py` Scrapes all data from the urls specified in `data/urls/`  to `data/html_pages/`
+    - `extract.py` Extracts the laws from `data/html_pages/` to `data/parsed_laws/laws.json` in the [data format](#Format)
     
 ## Data format
 
@@ -32,8 +30,7 @@ The are formatted like this:
 ```
 and can be accessed like this: `laws["CoronaVVBE4rahmen_4020201107"]["§ 1"]["(1)"]`
 
-I'm not really sure whether that is the best format yet, but it can easily be modified.
-
+I still have to inlcude dates.
 ## Next steps
-- [ ] Improve `extract.py` (e.g. include dates)
-- [ ] Annotate
+- [ ] Improve `extract.py` (e.g. include dates) The parsing is still awkward
+- [ ] Annotate (ongoing on [Hypothesis](https://hypothes.is/users/niklas_thesis))
