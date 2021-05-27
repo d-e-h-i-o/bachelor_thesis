@@ -3,7 +3,7 @@ from retry import retry
 
 
 @retry(tries=3, delay=2)
-def get_plaintext(url: str) -> str:
+def fetch_plaintext(url: str) -> str:
 
     article = NewsPlease.from_url(url)
 
