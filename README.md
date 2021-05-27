@@ -1,5 +1,9 @@
 # Bachelor Thesis
 
+## Pipeline
+
+![full pipeline](assets/pipeline.png)
+
 ## Project Structure
 - `annotation_pipeline` Fetches annotations from Hypothesis, processes them and save them to `database.db`
 - `law_scraping`
@@ -9,7 +13,7 @@
       - `html_pages/` The raw html_pages that were scraped by `scrape.py`
       - `parsed_laws/` The ouput from `extract.py`
       - `urls/` Contains urls from [gesetze.berlin.de](gesetze.berlin.de) for all [coronavirus laws in Berlin](https://de.wikipedia.org/wiki/SARS-CoV-2-Verordnungen_in_Berlin)
-- `database.db`  
+- `database.db` Contains `extraction_data` table and `matching_data` table
     
     
 ## Data format
