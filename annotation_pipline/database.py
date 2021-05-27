@@ -29,7 +29,8 @@ def save_to_database(annotation, plaintext) -> None:
     claim_starts = plaintext.find(claim)
     if claim_starts == -1:
         print(
-            f"Could not process annotation with id {annotation['id']}: Claim not found in plaintext."
+            f"Could not process annotation with id {annotation['id']} and url {annotation['uri']}: Claim not found in "
+            f"plaintext. "
         )
         return
     claim_ends = claim_starts + len(claim)
