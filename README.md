@@ -1,8 +1,19 @@
 # Bachelor Thesis
 
-## Pipeline
+## Workflow
 
 ![full pipeline](assets/pipeline.png)
+
+1. Annotate on [Hypothesis](https://hypothes.is/users/niklas_thesis)
+2. Run annotation pipepline `python annotation_pipline/run_pipeline.py`
+    1. Annotations are downloaded from Hypothesis
+    2. Annotated webpages are saved to [Wayback Machine](https://web.archive.org/)
+    3. Plaintext article is extraced with [NewsPlease](https://github.com/fhamborg/news-please)
+    4. `(annotation_id, plaintext, claim_start, claim_end)` is saved to `extraction_data` table in SQLite database
+    5. `(annotation_id, claim, referenced_law, date)` is saved to `matching_data` table in SQLite database
+  3. Export data: `sqlite3 -header -csv database.db "select plaintext, start, end from extraction_data;" > claim_extraction.csv`
+4. Import csv to [colab  notebook](https://colab.research.google.com/drive/1RWNgMftG8JlbKO7-DoQcmdlnpYZSCcCM) and run preprocessing function (TODO)
+5. Train
 
 ## Project Structure
 - `annotation_pipeline` Fetches annotations from Hypothesis, processes them and save them to `database.db`
