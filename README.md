@@ -92,3 +92,5 @@ I still have to include dates.
 ## Next steps
 - [ ] Improve `extract.py` (e.g. include dates) The parsing is still awkward
 - [ ] Annotate (ongoing on [Hypothesis](https://hypothes.is/users/niklas_thesis))
+- [ ] Extract plaintext for the articles that NewsPlease didn't handle correctly
+- [ ] Setup preprocessing function for claim extraction task
