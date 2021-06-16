@@ -17,11 +17,10 @@ pip install -r requirements.txt
     1. -> Annotations are downloaded from Hypothesis
     2. -> Annotated webpages are saved to [Wayback Machine](https://web.archive.org/)
     3. -> Plaintext article is extraced with [NewsPlease](https://github.com/fhamborg/news-please)
-    4. -> `(annotation_id, plaintext, claim_start, claim_end)` is saved to `extraction_data` table in database
-    5. -> `(annotation_id, claim, referenced_law, date)` is saved to `matching_data` table in database
+    4. -> Data is save to database
   3. Export data:  
-     `sqlite3 -header -csv database.db "select plaintext, start, end from extraction_data;" > claim_extraction.csv`  
-     `sqlite3 -header -csv database.db "select claim, reference, date from matching_data;" > claim_matching.csv`
+     `sqlite3 -header -csv database.db "select claim, url, plaintext from claims c join fulltext f on c.url = f.url;" > claim_extraction.csv`  
+     `sqlite3 -header -csv database.db "select claim, reference, date from "references" r join claims c on r.id = c.id;" > claim_matching.csv`
 4. Import csv to colab notebooks and run preprocessing function (TODO)
 5. Train (TODO)
 
@@ -41,31 +40,7 @@ pip install -r requirements.txt
 
 ### Database
 
-The SQLite database is called `database.db`.
-
-#### Table: extraction_data
-
-| id                     | plaintext | start | end |
-|------------------------|-----------|-------|-----|
-| HtgxPqAlEeuJxauJOt9Xgg | In Berlin können Geschäfte...   | 513   | 610 |
-
-The `id` is the annotation id from [Hypothesis](https://hypothes.is/users/niklas_thesis). The `plaintext` column contains
-the extracted plaintext of the article. The `start` and `end` column contain the position of the claim. E.g. a claim can be
-recovered from a row via `SELECT substr(plaintext,start,end-start+1) AS claim FROM extraction_data`.
-
-#### Table: matching_data
-
-| id                     | claim                                | reference              | date     |
-|------------------------|--------------------------------------|------------------------|----------|
-| k_sREqNEEeuuIJeXczF0ug | Kinder sind von der Maskenpflicht... | $ 4 (4) Nr. 1 InfSchMV | 19.04.21 |
-
-The `id` is the annotation id from [Hypothesis](https://hypothes.is/users/niklas_thesis). The `claim` is the fulltext claim.
-The `reference` is the law that is referenced in the claim.  
-The `date` column is a bit more difficult to interpret. In general, it should be interpreted as the date when the claim was made. So it 
-is often the date when the newspaper article was published. But in some cases, when the article speaks about future laws, the
-date will be postdated. Consider the statement: "From Sunday on, the following rules are in place: ...". In this case,
-the `date` column will contain a date when the rules are already in place. That is 
-so that the preprocessing function can find the valid fulltext text of a referenced law.
+The SQLite database is called `database.db`. See `annotation_pipleline/initial_migration.sql` for the data format.
 
 ### Laws
 
