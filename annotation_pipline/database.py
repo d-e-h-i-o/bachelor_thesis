@@ -11,31 +11,42 @@ today = datetime.today().date().strftime("%d.%m.%y")
 
 def not_yet_processed(raw_annotation) -> bool:
     """Returns false if the annotations is already in the database."""
-    cursor.execute("SELECT * FROM claims WHERE id = ?", (raw_annotation["id"],))
+    cursor.execute(
+        "SELECT * FROM claims WHERE annotation_id = ?", (raw_annotation["id"],)
+    )
     return not bool(cursor.fetchone())
+
+
+def fulltext_exists(url: str) -> bool:
+    """Returns true if fulltext is already in database"""
+    cursor.execute('SELECT * FROM fulltext WHERE url = ? and plaintext != ""', (url,))
+    return bool(cursor.fetchone())
 
 
 def _save_extraction_data(annotation, plaintext) -> None:
     cursor.execute(
-        "INSERT INTO fulltext VALUES(?, ?, ?)",
-        (annotation.url, plaintext, today),
-    )
-    cursor.execute(
-        "INSERT INTO claims VALUES(?, ?, ?, ?)",
+        "INSERT INTO claims VALUES(?, ?, ?)",
         (annotation.id, annotation.claim, annotation.url),
     )
+    if plaintext != "" and not fulltext_exists(annotation.url):
+        cursor.execute(
+            "INSERT INTO fulltext VALUES(?, ?, ?)",
+            (annotation.url, plaintext, today),
+        )
 
 
 def _save_matching_data(annotation) -> None:
     cursor.execute(
-        "INSERT INTO references VALUES(?, ?, ?)",
+        'INSERT INTO "references" VALUES(?, ?, ?)',
         (annotation.id, annotation.reference, annotation.date),
     )
 
 
 def save_to_database(raw_annotation, plaintext) -> None:
     annotation = Annotation(raw_annotation)
-    if plaintext.find(annotation.claim) == -1:
+    if (
+        not plaintext or plaintext.find(annotation.claim) == -1
+    ) and not fulltext_exists(annotation.url):
         print(
             f"For url {annotation.url}: Claim not found in plaintext. Plaintext has to be manually added to fulltext"
             f"table."
