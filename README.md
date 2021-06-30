@@ -20,7 +20,7 @@ pip install -r requirements.txt
     4. -> Data is save to database
   3. Export data:  
      `sqlite3 -header -csv database.db "select claim, url, plaintext from claims c join fulltext f on c.url = f.url;" > claim_extraction.csv`  
-     `sqlite3 -header -csv database.db "select claim, reference, date from "references" r join claims c on r.id = c.id;" > claim_matching.csv`
+     `sqlite3 -header -csv database.db 'select claim, reference, date from "references" r join claims c on r.annotation_id = c.annotation_id;' > claim_matching.csv`
 4. Import csv to colab notebooks and run preprocessing function (TODO)
 5. Train (TODO)
 
