@@ -27,3 +27,16 @@ class Annotation:
             if date := DATE.search(tag):
                 return date.group()
         return None
+
+    @property
+    def context(self) -> Optional[str]:
+        for tag in self.tags:
+            if "context:" in tag:
+                return tag.split("context:")[1]
+        return None
+
+    @property
+    def context_claim(self) -> str:
+        if context := self.context:
+            return f"{context} {self.claim}"
+        return self.claim
