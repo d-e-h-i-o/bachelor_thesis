@@ -6,6 +6,7 @@ import json
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from retry import retry
+import typer
 
 random_sleep = lambda: sleep(randint(2, 7))
 
@@ -27,21 +28,30 @@ def save_page(html: str, url: str, law: str) -> None:
         file.write(html)
 
 
-if __name__ == "__main__":
-
+def main(
+    url: str = typer.Option(None, help="Specify if a singe url should be scraped"),
+    law: str = typer.Option(None, help="Name of the law"),
+):
     driver = webdriver.Chrome(ChromeDriverManager().install())
     failed = []
 
-    with open("data/urls/all_urls.json", "r") as file:
-        to_scrape = json.load(file)
+    if not url:
+        with open("data/urls/all_urls.json", "r") as file:
+            to_scrape = json.load(file)
 
-    for law in to_scrape:
-        for version_url in to_scrape[law]:
-            if html := fetch_page(driver, version_url):
-                save_page(html, version_url, law)
-            else:
-                failed.append(version_url)
-            random_sleep()
+        for law in to_scrape:
+            for version_url in to_scrape[law]:
+                if html := fetch_page(driver, version_url):
+                    save_page(html, version_url, law)
+                else:
+                    failed.append(version_url)
+                random_sleep()
+    else:
+        save_page(fetch_page(driver, url), url, law)
 
     driver.close()
     print("Failed: ", failed)
+
+
+if __name__ == "__main__":
+    typer.run(main)
