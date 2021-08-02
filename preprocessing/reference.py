@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from .section import Subsection
 
 ACT = re.compile(
-    r" (InfSchMV|2. InfSchMV|3. InfSchMV|Zweite Krankenhaus-Covid-19-Verordnung|3.PflegeM-Cov-19-V"
-    r"|SARS-CoV-2-Infektionsschutzverordnung|IfSG|SARS-CoV-2-EindmaßnV)"
+    r"(InfSchMV|2. InfSchMV|3. InfSchMV"
+    r"|Krankenhaus-Covid-19-Verordnung|Zweite Krankenhaus-Covid-19-Verordnung"
+    r"|Zweite Pflegemaßnahmen-Covid-19-Verordnung|3. PflegeM-Cov-19-V"
+    r"|SARS-CoV-2-Infektionsschutzverordnung|IfSG|SARS-CoV-2-EindmaßnV|Corona-ArbSchV)"
 )
 SECTION_NR = re.compile(r"§ (\d\d?\S?) ")
 SUBSECTION_NR = re.compile(r"\((\d\d?\S?)\)")
@@ -13,6 +15,11 @@ SUBSECTION_NR = re.compile(r"\((\d\d?\S?)\)")
 
 class ParsingError(Exception):
     pass
+
+
+def parse_references(reference_annotation):
+    raw_refs = reference_annotation.split(" i.V.m. ")
+    return [Reference.from_string(raw_string) for raw_string in raw_refs]
 
 
 @dataclass
@@ -35,18 +42,21 @@ class Reference:
 
         section_match = SECTION_NR.search(string)
         if not section_match:
-            raise ParsingError
-        section_number = section_match.group(1)
-        string = string.replace(
-            section_match.group(0), ""
-        )  # make the further parsing easier
+            """Some laws are not split up into sections, e.g. § 17 SARS-CoV-2-EindmaßnV.
+            For those we do not assign a section."""
+            section_number = ""
+        else:
+            section_number = section_match.group(1)
+            string = string.replace(
+                section_match.group(0), ""
+            )  # make the further parsing easier
 
         subsection_match = SUBSECTION_NR.search(string)
         if not subsection_match:
             """Some laws are not split up in subsections, e.g. § 5 3. PflegeM-Cov-19-V
             (https://gesetze.berlin.de/bsbe/document/jlr-CoronaVPflege5VBEpP3)
-            For those, we assign the subsection 'full_section'"""
-            subsection_number = "full_section"
+            For those, we do not assign a subsection."""
+            subsection_number = ""
             sentences = string.strip()
         else:
             subsection_number = subsection_match.group(1)
