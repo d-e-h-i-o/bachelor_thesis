@@ -1,10 +1,14 @@
 import re
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from typing import List
 
 SECTION_DELIMITER = re.compile(r"\n\n\(\d\)")
 SECTION = re.compile(r"(\n\n\(\d\)) (.+?)(?=(\n\n\(\d\)|$))", re.DOTALL)
+
+
+def to_date(date_string: str) -> date:
+    return datetime.strptime(date_string, "%d.%m.%Y").date()
 
 
 @dataclass
@@ -23,6 +27,17 @@ class Section:
     text: str
     valid_from: date
     valid_to: date
+
+    @classmethod
+    def from_dict(cls, data, act):
+        return cls(
+            act=act,
+            section_number=data["sectionNumber"],
+            section_title=data["sectionTitle"],
+            text=data["text"],
+            valid_from=to_date(data["valid_from"]),
+            valid_to=to_date(data["valid_to"]),
+        )
 
     @property
     def subsections(self) -> List[Subsection]:
