@@ -124,5 +124,5 @@ if __name__ == "__main__":
         with open("data/html_pages/" + file_name, "r") as file:
             soup = LawSoup(BeautifulSoup(file.read(), "html.parser"))
             store = LawStore(law_name)
-            store.data["sections"].append(soup.extract_sections())
+            store.data["sections"] += soup.extract_sections()
             store.save()
