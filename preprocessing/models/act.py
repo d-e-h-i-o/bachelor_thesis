@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List
 import datetime
 
-from .section import Section
+from preprocessing.models.section import Section
 
 
 @dataclass
