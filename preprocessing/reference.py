@@ -79,4 +79,4 @@ class Reference:
                 and self.subsection_number == other.subsection_number
             )
         else:
-            raise NotImplemented
+            raise NotImplementedError
