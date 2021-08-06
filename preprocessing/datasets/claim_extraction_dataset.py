@@ -12,10 +12,12 @@ class ClaimExtractionDatasets:
     """Loads the claim extraction data from the db, groups it, and returns folds
     Usage:
         datasets = ClaimExtractionDatasets.load_from_database()
-        for fold in datasets.folds:
-            train = datasets.X[fold[0]]
-            test = datasets.X[fold[1]]
+        for train_split, test_split in datasets.folds:
+            train = datasets.X[train_split]
+            test = datasets.X[test_split]
     """
+
+    TASK = "claim_extraction"
 
     def __init__(self, rows, folds):
         self.kf = KFold(n_splits=folds)
@@ -44,7 +46,7 @@ class ClaimExtractionDatasets:
             if article[1]:
                 return_list.append(article)
 
-        return np.array(return_list)
+        return np.array(return_list, dtype=object)
 
     @classmethod
     def load_from_database(cls, database="database.db", folds=5):
