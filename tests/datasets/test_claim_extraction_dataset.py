@@ -1,3 +1,5 @@
+import pytest
+
 from preprocessing.datasets import ClaimExtractionDatasets
 
 
@@ -5,7 +7,7 @@ def test_claim_extraction_dataset_should_load_from_database():
     datasets = ClaimExtractionDatasets.load_from_database(
         database="tests/fixtures/database_fixture.db"
     )
-    assert datasets.X
+    assert datasets.X is not None
 
 
 def test_claim_extraction_dataset_should_group_rows():
@@ -23,8 +25,8 @@ def test_claim_extraction_dataset_folds():
     datasets = ClaimExtractionDatasets.load_from_database(
         database="tests/fixtures/database_fixture.db", folds=5
     )
-    for fold in datasets.folds:
-        train = datasets.X[fold[0]]
-        test = datasets.X[fold[1]]
+    for train_split, test_split in datasets.folds:
+        train = datasets.X[train_split]
+        test = datasets.X[test_split]
         assert 35 <= len(train) <= 36
         assert 8 <= len(test) <= 9
