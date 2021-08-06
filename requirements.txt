@@ -92,3 +92,6 @@ pytest~=6.2.4
 typer~=0.3.2
 numpy~=1.21.1
 scikit-learn~=0.24.2
+datasets~=1.11.0
+transformers~=4.9.1
+torch~=1.9.0
