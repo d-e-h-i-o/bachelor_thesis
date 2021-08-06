@@ -4,6 +4,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 Offset = Tuple[int, int]
+RawDataset = List[str, List[Tuple[Offset]]]
 
 
 class Input(TypedDict):
@@ -12,19 +13,34 @@ class Input(TypedDict):
     labels: NDArray[int]
 
 
+from torch.utils.data import Dataset
+
+
+class CustomDataset(Dataset):
+    def __init__(self, X: List[Input]):
+        self.X = X
+
+    def __len__(self):
+        return len(self.X)
+
+    def __getitem__(self, idx):
+        return self.X[idx]
+
+
 class Preprocessor:
     """
+    Takes raw data from a *Datasets class, tokenizes is, and returns a torch Dataset.
     Usage:
-        dataset = ClaimExtractionDataset.from_database()
+        datasets = ClaimExtractionDatasets.from_database()
         preprocessor = Preprocessor(task='claim_extraction', tokenizer=AutoTokenizer.from_pretrained(checkpoint))
-        input = preprocessor(dataset)
-        output = model(**input)
+        inputs = preprocessor(datasets.X)
+        output = model(**inputs[0])
     """
 
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
 
-    def preprocess_claim_extraction(self, X) -> List[Input]:
+    def preprocess_claim_extraction(self, X: RawDataset) -> CustomDataset:
         samples = []
         sample_offsets = []
         for sample_text, claim_offsets in X:
@@ -44,7 +60,7 @@ class Preprocessor:
             tokenized_inputs[i]["labels"] = self.align_claim_labels(
                 input_ids, offset_mapping, claim_offsets
             )
-        return tokenized_inputs
+        return CustomDataset(tokenized_inputs)
 
     def chunk_fulltext(
         self, fulltext: str, claims: List[Offset]
@@ -104,7 +120,7 @@ class Preprocessor:
 
         return labels
 
-    def __call__(self, dataset):
+    def __call__(self, dataset) -> Dataset:
         if dataset.TASK == "claim_extraction":
             return self.preprocess_claim_extraction(dataset)
         if dataset.TASK == "law_matching":
