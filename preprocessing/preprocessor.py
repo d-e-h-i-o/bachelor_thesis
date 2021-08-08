@@ -4,7 +4,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 Offset = Tuple[int, int]
-RawDataset = List[str, List[Tuple[Offset]]]
+RawDataset = List[Tuple[str, List[Offset]]]
 
 
 class Input(TypedDict):
@@ -41,6 +41,11 @@ class Preprocessor:
         self.tokenizer = tokenizer
 
     def preprocess_claim_extraction(self, X: RawDataset) -> CustomDataset:
+        """
+        Transforms a the raw data (text string with list of claim (start, end) tuples),
+        tokenizes them, aligns the claim indexes with the tokenized text, and returns
+        a torch Dataset.
+        """
         samples = []
         sample_offsets = []
         for sample_text, claim_offsets in X:
@@ -62,8 +67,9 @@ class Preprocessor:
             )
         return CustomDataset(tokenized_inputs)
 
+    @staticmethod
     def chunk_fulltext(
-        self, fulltext: str, claims: List[Offset]
+        fulltext: str, claims: List[Offset]
     ) -> List[Tuple[str, List[Offset]]]:
         """Split article fulltext into smaller chunks (max. 512 tokens), with the condition that
         every claim is fully contained in one chunk."""
@@ -94,8 +100,8 @@ class Preprocessor:
 
         return chunks
 
+    @staticmethod
     def align_claim_labels(
-        self,
         input_ids: List[int],
         offset_mappings: List[Offset],
         claim_offsets: List[Offset],
