@@ -122,7 +122,7 @@ class Preprocessor:
             start = get_offset(claim_start)
             end = get_offset(claim_end - 1)
             labels[start] = 1
-            labels[range(start + 1, end + 1)] = 2
+            labels[slice(start + 1, end + 1)] = 2
 
         return labels
 
