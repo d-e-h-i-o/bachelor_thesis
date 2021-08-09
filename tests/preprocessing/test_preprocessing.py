@@ -7,7 +7,7 @@ from preprocessing.datasets import ClaimExtractionDatasets
 from preprocessing import Preprocessor
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def claim_extraction_sample():
     datasets = ClaimExtractionDatasets.load_from_database(
         database="tests/fixtures/database_fixture.db"
