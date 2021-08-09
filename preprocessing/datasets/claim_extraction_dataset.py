@@ -7,6 +7,8 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.model_selection import KFold
 
+ClaimExtractionSample = Tuple[str, List[Tuple[int, int]]]
+
 
 class ClaimExtractionDatasets:
     """Loads the claim extraction data from the db, groups it, and returns folds
@@ -28,7 +30,7 @@ class ClaimExtractionDatasets:
         return self.kf.split(self.X)
 
     @classmethod
-    def group_rows(cls, rows) -> NDArray[Tuple[str, List[Tuple[int, int]]]]:
+    def group_rows(cls, rows) -> NDArray[ClaimExtractionSample]:
         """Takes the db rows (url, fulltext, claim), groups them by url, and returns for every
         url a tuple (fulltext, [(start, end)]) with the claim offsets."""
         sorted_rows = sorted(rows, key=itemgetter(0))

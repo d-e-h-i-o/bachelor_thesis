@@ -1,5 +1,6 @@
 import re
 from dataclasses import dataclass
+from typing import List
 
 from .section import Subsection
 
@@ -15,11 +16,6 @@ SUBSECTION_NR = re.compile(r"\((\d\d?\S?)\)")
 
 class ParsingError(Exception):
     pass
-
-
-def parse_references(reference_annotation):
-    raw_refs = reference_annotation.split(" i.V.m. ")
-    return [Reference.from_string(raw_string) for raw_string in raw_refs]
 
 
 @dataclass
@@ -80,3 +76,8 @@ class Reference:
             )
         else:
             raise NotImplementedError
+
+
+def parse_references(reference_annotation: str) -> List[Reference]:
+    raw_refs = reference_annotation.split(" i.V.m. ")
+    return [Reference.from_string(raw_string) for raw_string in raw_refs]
