@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from datetime import datetime
 from typing import Generator, Tuple, List
@@ -6,7 +7,7 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.model_selection import KFold
 
-from preprocessing.models import Reference, parse_references
+from preprocessing.models import Reference, parse_references, Act
 
 LawMatchingSample = Tuple[str, List[Reference], datetime.date]
 
@@ -25,6 +26,7 @@ class LawMatchingDataset:
     def __init__(self, rows, folds):
         self.kf = KFold(n_splits=folds)
         self.X = self.parse_rows(rows)
+        self.acts = self.load_legislation()
 
     @property
     def folds(self) -> Generator:
@@ -53,3 +55,10 @@ class LawMatchingDataset:
         rows = cursor.fetchall()
         cursor.close()
         return cls(rows, folds=folds)
+
+    @classmethod
+    def load_legislation(cls, path="legislation"):
+        acts = []
+        for file_name in os.listdir(path):
+            acts.append(Act.from_file(f"{path}/{file_name}"))
+        return acts
