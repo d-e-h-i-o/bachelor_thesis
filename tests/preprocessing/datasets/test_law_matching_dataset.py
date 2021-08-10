@@ -1,16 +1,7 @@
 import datetime
 
-import pytest
 
-from preprocessing.datasets import LawMatchingDatasets
 from preprocessing import Reference, Act
-
-
-@pytest.fixture(scope="session")
-def law_matching_datasets():
-    return LawMatchingDatasets.load_from_database(
-        database="tests/fixtures/database_fixture.db"
-    )
 
 
 def test_law_matching_dataset_should_load_from_database(law_matching_datasets):

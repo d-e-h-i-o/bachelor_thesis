@@ -4,7 +4,7 @@ from datetime import date, datetime
 from typing import List
 
 SECTION_DELIMITER = re.compile(r"\n\n\(\d\)")
-SECTION = re.compile(r"(\n\n\(\d\)) (.+?)(?=(\n\n\(\d\)|$))", re.DOTALL)
+SECTION = re.compile(r"\n\n(\(\d\)) (.+?)(?=(\n\n\(\d\)|$))", re.DOTALL)
 
 
 def to_date(date_string: str) -> date:
