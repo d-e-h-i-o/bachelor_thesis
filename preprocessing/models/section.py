@@ -1,10 +1,10 @@
 import re
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import List
+from typing import Dict
 
 SECTION_DELIMITER = re.compile(r"\n\n\(\d\)")
-SECTION = re.compile(r"\n\n(\(\d\)) (.+?)(?=(\n\n\(\d\)|$))", re.DOTALL)
+SECTION = re.compile(r"\n\n\((\d)\) (.+?)(?=(\n\n\(\d\)|$))", re.DOTALL)
 
 
 def to_date(date_string: str) -> date:
@@ -40,7 +40,7 @@ class Section:
         )
 
     @property
-    def subsections(self) -> List[Subsection]:
+    def subsections(self) -> Dict[str, Subsection]:
         if SECTION_DELIMITER.search(self.text):
             subsections = []
             for subsection_match in SECTION.finditer(self.text):
@@ -56,4 +56,4 @@ class Section:
             subsections = [
                 Subsection("full_section", self.text, self.section_number, self.act)
             ]
-        return subsections
+        return {subsection.subsection_number: subsection for subsection in subsections}

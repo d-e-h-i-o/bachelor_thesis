@@ -2,6 +2,7 @@ from typing import List, Tuple, TypedDict
 
 import numpy as np
 from numpy.typing import NDArray
+from torch.utils.data import Dataset
 
 from preprocessing.datasets import LawMatchingSample
 
@@ -14,9 +15,6 @@ class Input(TypedDict):
     input_ids: List[int]
     offset_mapping: List[Offset]
     labels: NDArray[int]
-
-
-from torch.utils.data import Dataset
 
 
 class CustomDataset(Dataset):

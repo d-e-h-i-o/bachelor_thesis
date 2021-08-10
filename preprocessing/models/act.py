@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict
 import datetime
 
 from preprocessing.models.section import Section
@@ -24,13 +24,14 @@ class Act:
             abbreviation=data["abbreviation"], full_name=data["name"], sections=sections
         )
 
-    def all_sections_for(self, date: datetime.date) -> List[Section]:
-        return list(
-            filter(
+    def all_sections_for(self, date: datetime.date) -> Dict[str, Section]:
+        return {
+            section.section_number: section
+            for section in filter(
                 lambda section: section.valid_from >= date <= section.valid_to,
                 self.sections,
             )
-        )
+        }
 
     def has_sections_for(self, date: datetime.date) -> bool:
         """Returns True if there are valid sections for a certain date."""

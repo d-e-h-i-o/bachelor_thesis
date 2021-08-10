@@ -3,7 +3,7 @@ import sqlite3
 import csv
 from datetime import datetime
 from random import choice
-from typing import Generator, Tuple, List, Union
+from typing import Generator, Tuple, List, Union, Optional, Dict
 
 import numpy as np
 from numpy.typing import NDArray
@@ -13,6 +13,22 @@ from preprocessing.models import Reference, parse_references, Act
 
 LawMatchingSample = Tuple[str, Reference, datetime.date, bool]
 DBRow = Tuple[str, str, str]
+
+
+def resolve_reference_to_subsection_text(
+    reference: Reference, acts: Dict[str, Act], date: datetime.date
+) -> Optional[str]:
+    """Returns the subsection text of a reference."""
+    if act := acts.get(reference.act):
+        if section := act.all_sections_for(date).get(reference.section_number):
+            subsections = section.subsections
+            if subsection := subsections.get("full_section"):
+                # section has no split into subsections
+                return subsection.text
+            if subsection := subsections.get(reference.subsection_number):
+                return subsection.text
+
+    return None
 
 
 class LawMatchingDatasets:
@@ -100,14 +116,18 @@ class LawMatchingDatasets:
         """
         while True:
             act = choice(
-                list(filter(lambda act: act.has_sections_for(date), self.acts))
+                list(
+                    filter(
+                        lambda act: act.has_sections_for(date), list(self.acts.values())
+                    )
+                )
             )
-            valid_sections = act.all_sections_for(date)
+            valid_sections = list(act.all_sections_for(date).values())
             if not valid_sections:
                 continue
 
             section = choice(valid_sections)
-            subsection = choice(section.subsections)
+            subsection = choice(list(section.subsections.values()))
             reference = Reference(
                 act=act.abbreviation,
                 section_number=section.section_number,
@@ -122,4 +142,4 @@ class LawMatchingDatasets:
         acts = []
         for file_name in os.listdir(path):
             acts.append(Act.from_file(f"{path}/{file_name}"))
-        return acts
+        return {act.abbreviation: act for act in acts}

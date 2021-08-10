@@ -24,8 +24,9 @@ def test_preprocessor_chunking_works(claim_extraction_sample):
     fulltext, claim_offsets = claim_extraction_sample[0], claim_extraction_sample[1]
 
     chunks = preprocessor.chunk_fulltext(fulltext, claim_offsets)
+
     assert (
-        len([claim for chunk, chunk_claims in chunks for claim in chunk_claims]) == 18
+        len([claim for chunk, chunk_claims in chunks for claim in chunk_claims]) == 19
     )  # all claims are still here
 
     assert (
