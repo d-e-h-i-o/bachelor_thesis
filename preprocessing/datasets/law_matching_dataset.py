@@ -3,7 +3,7 @@ import sqlite3
 import csv
 from datetime import datetime
 from random import choice
-from typing import Generator, Tuple, List
+from typing import Generator, Tuple, List, Union
 
 import numpy as np
 from numpy.typing import NDArray
@@ -12,6 +12,7 @@ from sklearn.model_selection import KFold
 from preprocessing.models import Reference, parse_references, Act
 
 LawMatchingSample = Tuple[str, Reference, datetime.date, bool]
+DBRow = Tuple[str, str, str]
 
 
 class LawMatchingDatasets:
@@ -31,7 +32,12 @@ class LawMatchingDatasets:
 
     TASK = "law_matching"
 
-    def __init__(self, input, folds, needs_preprocessing=True):
+    def __init__(
+        self,
+        input: Union[List[DBRow], NDArray[LawMatchingSample]],
+        folds,
+        needs_preprocessing=True,
+    ):
         self.kf = KFold(n_splits=folds)
         self.acts = self.load_legislation()
         if needs_preprocessing:
@@ -43,7 +49,7 @@ class LawMatchingDatasets:
     def folds(self) -> Generator:
         return self.kf.split(self.X)
 
-    def parse_rows(self, rows) -> NDArray[LawMatchingSample]:
+    def parse_rows(self, rows: DBRow) -> NDArray[LawMatchingSample]:
         """Parse the raw rows from the database, and adds a negative sample for every positive."""
         samples = []
 
