@@ -1,30 +1,43 @@
 import datetime
 
-from preprocessing.datasets import LawMatchingDataset
+import pytest
+
+from preprocessing.datasets import LawMatchingDatasets
 from preprocessing import Reference, Act
 
 
-def test_law_matching_dataset_should_load_from_database():
-    datasets = LawMatchingDataset.load_from_database(
+@pytest.fixture(scope="session")
+def law_matching_datasets():
+    return LawMatchingDatasets.load_from_database(
         database="tests/fixtures/database_fixture.db"
     )
-    assert datasets.X is not None
 
 
-def test_law_matching_dataset_should_parse_rows():
-    datasets = LawMatchingDataset.load_from_database(
-        database="tests/fixtures/database_fixture.db"
+def test_law_matching_dataset_should_load_from_database(law_matching_datasets):
+
+    assert law_matching_datasets.X is not None
+
+
+def test_law_matching_dataset_should_parse_rows(law_matching_datasets):
+
+    assert len(law_matching_datasets.X) == 862  # both positive and negative samples
+    assert isinstance(law_matching_datasets.X[0][0], str)  # claim
+    assert isinstance(law_matching_datasets.X[0][1], Reference)  # list of references
+    assert isinstance(law_matching_datasets.X[0][2], datetime.date)  # date of the claim
+    assert isinstance(law_matching_datasets.X[0][3], bool)  # label
+
+
+def test_law_matching_dataset_should_load_legislation(law_matching_datasets):
+
+    assert law_matching_datasets.acts
+    assert isinstance(law_matching_datasets.acts[0], Act)
+
+
+def test_law_matching_dataset_is_balanced(law_matching_datasets):
+
+    positive_samples = filter(lambda sample: sample[3] is True, law_matching_datasets.X)
+    negative_samples = filter(
+        lambda sample: sample[3] is False, law_matching_datasets.X
     )
-    assert len(datasets.X) == 315
-    assert isinstance(datasets.X[0][0], str)  # claim
-    assert isinstance(datasets.X[0][1], list)  # list of references
-    assert isinstance(datasets.X[0][1][0], Reference)
-    assert isinstance(datasets.X[0][2], datetime.date)
 
-
-def test_law_matching_dataset_should_load_legislation():
-    datasets = LawMatchingDataset.load_from_database(
-        database="tests/fixtures/database_fixture.db"
-    )
-    assert datasets.acts
-    assert isinstance(datasets.acts[0], Act)
+    assert len(list(positive_samples)) == len(list(negative_samples))
