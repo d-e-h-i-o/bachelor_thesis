@@ -32,5 +32,10 @@ class Act:
             )
         )
 
+    def has_sections_for(self, date: datetime.date) -> bool:
+        """Returns True if there are valid sections for a certain date."""
+
+        return len(self.all_sections_for(date)) > 0
+
     def __repr__(self):
         return f"Act({self.full_name} ({self.abbreviation}))"
