@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import csv
 from datetime import datetime
 from random import choice
 from typing import Generator, Tuple, List
@@ -30,10 +31,13 @@ class LawMatchingDatasets:
 
     TASK = "law_matching"
 
-    def __init__(self, rows, folds):
+    def __init__(self, input, folds, needs_preprocessing=True):
         self.kf = KFold(n_splits=folds)
         self.acts = self.load_legislation()
-        self.X = self.parse_rows(rows)
+        if needs_preprocessing:
+            self.X = self.parse_rows(input)
+        else:
+            self.X = input
 
     @property
     def folds(self) -> Generator:
@@ -70,6 +74,17 @@ class LawMatchingDatasets:
         rows = cursor.fetchall()
         cursor.close()
         return cls(rows, folds=folds)
+
+    @classmethod
+    def load_from_csv(cls, file_name, folds=5):
+        pass  # TODO
+
+    def save_to_csv(self, file_name):
+        with open(file_name, "w", newline="") as csvfile:
+            writer = csv.writer(csvfile, delimiter=";")
+
+            for sample in self.X:
+                writer.writerow(sample)
 
     def sample_reference(
         self, negative_list: List[Reference], date: datetime.date
