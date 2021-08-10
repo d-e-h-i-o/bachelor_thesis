@@ -11,7 +11,7 @@ from sklearn.model_selection import KFold
 
 from preprocessing.models import Reference, parse_references, Act
 
-LawMatchingSample = Tuple[str, Reference, datetime.date, bool]
+LawMatchingSample = Tuple[str, str, bool]
 DBRow = Tuple[str, str, str]
 
 
@@ -67,7 +67,7 @@ class LawMatchingDatasets:
 
     def parse_rows(self, rows: List[DBRow]) -> NDArray[LawMatchingSample]:
         """Parse the raw rows from the database, and adds a negative sample for every positive."""
-        samples = []
+        samples: List[LawMatchingSample] = []
 
         for claim, reference_string, date_string in rows:
             claim = claim.strip()
@@ -75,9 +75,15 @@ class LawMatchingDatasets:
             date = datetime.strptime(date_string, "%d.%m.%y").date()
             used_references = references.copy()  # those are already in an sample
             for reference in references:
-                positive_sample = (claim, reference, date, True)
+                reference_text = resolve_reference_to_subsection_text(
+                    reference, self.acts, date
+                )
+                positive_sample = (claim, reference_text, True)
                 wrong_reference = self.sample_reference(used_references, date)
-                negative_sample = (claim, wrong_reference, date, False)
+                wrong_reference_text = resolve_reference_to_subsection_text(
+                    wrong_reference, self.acts, date
+                )
+                negative_sample = (claim, wrong_reference_text, False)
                 used_references.append(wrong_reference)
 
                 samples.append(positive_sample)
