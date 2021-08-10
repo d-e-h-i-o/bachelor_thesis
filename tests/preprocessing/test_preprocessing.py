@@ -2,6 +2,8 @@ import pytest
 from unittest.mock import MagicMock
 
 import numpy as np
+import vcr
+from transformers import AutoTokenizer
 
 from preprocessing.datasets import ClaimExtractionDatasets
 from preprocessing import Preprocessor
@@ -17,7 +19,7 @@ def claim_extraction_sample():
 
 def test_preprocessor_chunking_works(claim_extraction_sample):
     tokenizer = MagicMock()
-    preprocessor = Preprocessor(tokenizer)
+    preprocessor = Preprocessor(tokenizer, "claim_extraction")
 
     fulltext, claim_offsets = claim_extraction_sample[0], claim_extraction_sample[1]
 
@@ -36,7 +38,7 @@ def test_preprocessor_chunking_works(claim_extraction_sample):
 
 def test_preprocessor_align_claim_label_works():
     tokenizer = MagicMock()
-    preprocessor = Preprocessor(tokenizer)
+    preprocessor = Preprocessor(tokenizer, "claim_extraction")
 
     input_ids = [102, 8862, 818, 7679, 16300, 30881, 1420, 28237, 103]
     offset_mapping = [
@@ -56,3 +58,15 @@ def test_preprocessor_align_claim_label_works():
 
     labels = preprocessor.align_claim_labels(input_ids, offset_mapping, claim_offsets)
     assert (labels == expected_labels).all()
+
+
+@vcr.use_cassette("tests/vcr/tokenizer")
+def test_preprocessor_end_to_end_claim_extraction(claim_extraction_datasets):
+    tokenizer = AutoTokenizer.from_pretrained("deepset/gbert-large")
+    preprocessor = Preprocessor(tokenizer, "claim_extraction")
+
+    dataset = claim_extraction_datasets.X[slice(0, 10)]
+    input = preprocessor(dataset)
+
+    assert input["input_ids"]
+    assert input["labels"]

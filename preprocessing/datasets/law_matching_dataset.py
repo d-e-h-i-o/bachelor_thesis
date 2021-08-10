@@ -49,7 +49,7 @@ class LawMatchingDatasets:
     def folds(self) -> Generator:
         return self.kf.split(self.X)
 
-    def parse_rows(self, rows: DBRow) -> NDArray[LawMatchingSample]:
+    def parse_rows(self, rows: List[DBRow]) -> NDArray[LawMatchingSample]:
         """Parse the raw rows from the database, and adds a negative sample for every positive."""
         samples = []
 

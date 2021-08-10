@@ -41,6 +41,7 @@ class ClaimExtractionDatasets:
             fulltext: str = group[0][1]
             article = (fulltext, [])
             for _, _, claim in group:
+                claim = claim.strip()
                 if claim in fulltext:
                     start: int = fulltext.find(claim)
                     end: int = start + len(claim)

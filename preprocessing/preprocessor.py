@@ -3,8 +3,11 @@ from typing import List, Tuple, TypedDict
 import numpy as np
 from numpy.typing import NDArray
 
+from preprocessing.datasets import LawMatchingSample
+
 Offset = Tuple[int, int]
-RawDataset = List[Tuple[str, List[Offset]]]
+RawClaimExtractionDataset = NDArray[Tuple[str, List[Offset]]]
+RawLawMatchingDataset = NDArray[LawMatchingSample]
 
 
 class Input(TypedDict):
@@ -37,10 +40,13 @@ class Preprocessor:
         output = model(**inputs[0])
     """
 
-    def __init__(self, tokenizer):
+    def __init__(self, tokenizer, task: str):
         self.tokenizer = tokenizer
+        self.task = task
 
-    def preprocess_claim_extraction(self, X: RawDataset) -> CustomDataset:
+    def preprocess_claim_extraction(
+        self, X: RawClaimExtractionDataset
+    ) -> CustomDataset:
         """
         Transforms a the raw data (text string with list of claim (start, end) tuples),
         tokenizes them, aligns the claim indexes with the tokenized text, and returns
@@ -58,12 +64,13 @@ class Preprocessor:
             samples, return_offsets_mapping=True, truncation=True
         )
 
-        for i in range(len(tokenized_inputs)):
-            input_ids = tokenized_inputs[i]["input_ids"]
-            offset_mapping = tokenized_inputs[i]["offset_mappings"]
+        tokenized_inputs["labels"] = []
+        for i in range(len(tokenized_inputs["input_ids"])):
+            input_ids = tokenized_inputs["input_ids"][i]
+            offset_mapping = tokenized_inputs["offset_mapping"][i]
             claim_offsets = sample_offsets[i]
-            tokenized_inputs[i]["labels"] = self.align_claim_labels(
-                input_ids, offset_mapping, claim_offsets
+            tokenized_inputs["labels"].append(
+                self.align_claim_labels(input_ids, offset_mapping, claim_offsets),
             )
         return CustomDataset(tokenized_inputs)
 
@@ -93,7 +100,11 @@ class Preprocessor:
             for claim_start, claim_end in claims:
                 # add claims that are fully contained in chunk
                 if claim_start >= (i - offset) and claim_end <= chunk_last:
-                    chunk_claims.append((claim_start, claim_end))
+                    # offsets have to be newly calculated for the chunk
+                    claim = fulltext[claim_start:claim_end]
+                    new_start: int = chunk.find(claim)
+                    new_end: int = new_start + len(claim)
+                    chunk_claims.append((new_start, new_end))
 
             offset = next_offset or 0
             chunks.append((chunk, chunk_claims))
@@ -103,7 +114,7 @@ class Preprocessor:
     @staticmethod
     def align_claim_labels(
         input_ids: List[int],
-        offset_mappings: List[Offset],
+        offset_mapping: List[Offset],
         claim_offsets: List[Offset],
     ) -> NDArray[int]:
         """Takes a list of input ids, offset mapping from the tokenizer, and (claim_start, claim_end) tuples,
@@ -111,7 +122,8 @@ class Preprocessor:
         labels = np.zeros(len(input_ids))
 
         def get_offset(original_position: int) -> int:
-            for index, (offset_start, offset_end) in enumerate(offset_mappings):
+            # Does not work if the original claim started or ended with a space, since those don't have an offset
+            for index, (offset_start, offset_end) in enumerate(offset_mapping):
                 if offset_end == 0:
                     # special token
                     continue
@@ -126,8 +138,13 @@ class Preprocessor:
 
         return labels
 
-    def __call__(self, dataset) -> Dataset:
-        if dataset.TASK == "claim_extraction":
-            return self.preprocess_claim_extraction(dataset)
-        if dataset.TASK == "law_matching":
+    def preprocess_law_matching(self, X: RawLawMatchingDataset) -> CustomDataset:
+        pass
+
+    def __call__(self, data: NDArray) -> Dataset:
+        if self.task == "claim_extraction":
+            return self.preprocess_claim_extraction(data)
+        if self.task == "law_matching":
+            raise NotImplementedError
+        else:
             raise NotImplementedError
