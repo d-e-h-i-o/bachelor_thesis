@@ -21,6 +21,8 @@ def resolve_reference_to_subsection_text(
     """Returns the subsection text of a reference."""
     if act := acts.get(reference.act):
         if section := act.all_sections_for(date).get(reference.section_number):
+            if reference.subsection_number == "":
+                return section.text
             subsections = section.subsections
             if subsection := subsections.get("full_section"):
                 # section has no split into subsections

@@ -11,7 +11,7 @@ def test_law_matching_dataset_should_load_from_database(law_matching_datasets):
 
 def test_law_matching_dataset_should_parse_rows(law_matching_datasets):
 
-    assert len(law_matching_datasets.X) == 862  # both positive and negative samples
+    assert len(law_matching_datasets.X) == 890  # both positive and negative samples
     assert isinstance(law_matching_datasets.X[0][0], str)  # claim
     assert isinstance(law_matching_datasets.X[0][1], str)  # list of references
     assert isinstance(law_matching_datasets.X[0][2], bool)  # label
@@ -45,6 +45,6 @@ def test_resolve_reference(law_matching_datasets):
     )
     assert (
         text
-        == "Staatliche, private und konfessionelle Hochschulen einschließlich ihrer Einrichtungen dürfen nicht für "
-        "den Präsenzlehrbetrieb und nicht für den Publikumsverkehr geöffnet werden."
+        == "\n\nWissenschaftliche Bibliotheken und Archive dürfen unter Beachtung der Hygieneregeln nach §\xa02 "
+        "Absatz\xa01 ab dem 27. April 2020 für den Leihbetrieb geöffnet werden."
     )
