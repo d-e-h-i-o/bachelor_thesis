@@ -79,7 +79,7 @@ class Preprocessor:
     ) -> List[Tuple[str, List[Offset]]]:
         """Split article fulltext into smaller chunks (max. 512 tokens), with the condition that
         every claim is fully contained in one chunk."""
-        length = 2500  # 2500 chars are a heuristic
+        length = 2300  # this is a heuristic
         offset = 0
         chunks = []
 
@@ -90,17 +90,17 @@ class Preprocessor:
 
             next_offset = None
             for claim_start, claim_end in claims:
-                if claim_start <= chunk_last <= claim_end:
+                if claim_start <= chunk_last < claim_end:
                     # overlapping claim
                     next_offset = chunk_last - claim_start
                     chunk_last = claim_start
-                    chunk = fulltext[i - offset : chunk_last]
+                    chunk = fulltext[(i - offset) : chunk_last]
 
             for claim_start, claim_end in claims:
                 # add claims that are fully contained in chunk
-                if claim_start >= (i - offset) and claim_end <= chunk_last:
+                claim = fulltext[claim_start:claim_end]
+                if claim in chunk:
                     # offsets have to be newly calculated for the chunk
-                    claim = fulltext[claim_start:claim_end]
                     new_start: int = chunk.find(claim)
                     new_end: int = new_start + len(claim)
                     chunk_claims.append((new_start, new_end))
@@ -132,6 +132,10 @@ class Preprocessor:
         for claim_start, claim_end in claim_offsets:
             start = get_offset(claim_start)
             end = get_offset(claim_end - 1)
+            if end is None:
+                raise Exception(
+                    "The respective chunk is too big, so the input got truncated."
+                )
             labels[start] = 1
             labels[slice(start + 1, end + 1)] = 2
 

@@ -66,7 +66,7 @@ def test_preprocessor_end_to_end_claim_extraction(claim_extraction_datasets):
     tokenizer = AutoTokenizer.from_pretrained("deepset/gbert-large")
     preprocessor = Preprocessor(tokenizer, "claim_extraction")
 
-    dataset = claim_extraction_datasets.X[slice(0, 10)]
+    dataset = claim_extraction_datasets.X
     input = preprocessor(dataset)
     assert input["input_ids"]
     assert input["labels"]
