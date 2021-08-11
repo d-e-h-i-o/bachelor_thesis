@@ -33,6 +33,24 @@ from preprocessing.models import Reference, parse_references
                 sentences="S. 1 Nr. 1",
             ),
         ),
+        (
+            "§ 6a (1) 2. InfSchMV",
+            Reference(
+                act="2. InfSchMV",
+                section_number="6a",
+                subsection_number="1",
+                sentences="",
+            ),
+        ),
+        (
+            "§ 28 (2) InfSchMV",
+            Reference(
+                act="InfSchMV",
+                section_number="28",
+                subsection_number="2",
+                sentences="",
+            ),
+        ),
     ],
 )
 def test_reference(raw_string, target):
