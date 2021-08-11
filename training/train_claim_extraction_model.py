@@ -28,7 +28,7 @@ def train():
     datasets = ClaimExtractionDatasets.load_from_database()
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
     data_collator = DataCollatorForTokenClassification(tokenizer)
-    preprocessor = Preprocessor(tokenizer)
+    preprocessor = Preprocessor(tokenizer, "claim_extraction")
     results = []
 
     for i, (train_split, test_split) in enumerate(datasets.folds):
