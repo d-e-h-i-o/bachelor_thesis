@@ -11,14 +11,15 @@ RawClaimExtractionDataset = NDArray[Tuple[str, List[Offset]]]
 RawLawMatchingDataset = NDArray[LawMatchingSample]
 
 
-class Input(TypedDict):
+class Input(TypedDict, total=False):
     input_ids: List[int]
     offset_mapping: List[Offset]
+    attention_mask: List[int]
     labels: NDArray[int]
 
 
 class CustomDataset(Dataset):
-    def __init__(self, X: List[Input]):
+    def __init__(self, X):
         self.X = X
 
     def __len__(self):
@@ -137,12 +138,21 @@ class Preprocessor:
         return labels
 
     def preprocess_law_matching(self, X: RawLawMatchingDataset) -> CustomDataset:
-        pass
+
+        samples = {"input_ids": [], "attention_mask": [], "labels": []}
+        for claim, text, is_match in X:
+            sample = dict(
+                **self.tokenizer(claim, text, truncation=True), labels=int(is_match)
+            )
+            samples["input_ids"].append(sample["input_ids"])
+            samples["attention_mask"].append(sample["attention_mask"])
+            samples["labels"].append(sample["labels"])
+        return CustomDataset(samples)
 
     def __call__(self, data: NDArray) -> Dataset:
         if self.task == "claim_extraction":
             return self.preprocess_claim_extraction(data)
         if self.task == "law_matching":
-            raise NotImplementedError
+            return self.preprocess_law_matching(data)
         else:
             raise NotImplementedError
