@@ -28,7 +28,7 @@ class Act:
         return {
             section.section_number: section
             for section in filter(
-                lambda section: section.valid_from >= date <= section.valid_to,
+                lambda section: section.valid_from <= date <= section.valid_to,
                 self.sections,
             )
         }
