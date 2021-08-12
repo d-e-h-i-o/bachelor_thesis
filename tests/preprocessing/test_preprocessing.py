@@ -5,7 +5,7 @@ import numpy as np
 import vcr
 from transformers import AutoTokenizer
 
-from training.preprocessing.datasets import ClaimExtractionDatasets
+from training.preprocessing.datasets_ import ClaimExtractionDatasets
 from training.preprocessing import Preprocessor
 
 
@@ -68,7 +68,6 @@ def test_preprocessor_end_to_end_claim_extraction(claim_extraction_datasets):
 
     dataset = claim_extraction_datasets.X
     input = preprocessor(dataset)
-    breakpoint()
     assert input["input_ids"]
     assert input["labels"]
 

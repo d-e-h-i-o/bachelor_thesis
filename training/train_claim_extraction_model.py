@@ -3,10 +3,9 @@ from transformers import (
     TrainingArguments,
     Trainer,
     AutoTokenizer,
-    DataCollatorForTokenClassification,
 )
 from preprocessing import Preprocessor
-from preprocessing.datasets import ClaimExtractionDatasets
+from preprocessing.datasets_ import ClaimExtractionDatasets
 
 from utils import eval_k_fold, compute_metrics
 

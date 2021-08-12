@@ -1,4 +1,4 @@
-from preprocessing.datasets import ClaimExtractionDatasets
+from training.preprocessing.datasets_ import ClaimExtractionDatasets
 
 
 def test_claim_extraction_dataset_should_load_from_database():

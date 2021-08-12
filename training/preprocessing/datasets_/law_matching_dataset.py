@@ -9,7 +9,7 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.model_selection import KFold
 
-from training.preprocessing.models import Reference, parse_references, Act
+from .models import Reference, parse_references, Act
 
 LawMatchingSample = Tuple[str, str, bool]
 DBRow = Tuple[str, str, str]

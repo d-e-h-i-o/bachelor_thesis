@@ -1,7 +1,7 @@
 import datetime
 
-from preprocessing import Reference, Act
-from preprocessing.datasets import resolve_reference_to_subsection_text
+from training.preprocessing.datasets_.models import Reference
+from training.preprocessing.datasets_ import resolve_reference_to_subsection_text
 
 
 def test_law_matching_dataset_should_load_from_database(law_matching_datasets):

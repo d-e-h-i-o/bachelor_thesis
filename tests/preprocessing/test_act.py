@@ -1,6 +1,6 @@
 from datetime import date
 
-from preprocessing import Act
+from training.preprocessing.datasets_.models import Act
 
 
 def test_act_from_file_constructor():

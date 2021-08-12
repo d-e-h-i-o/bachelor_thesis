@@ -1,6 +1,6 @@
 import pytest
 
-from preprocessing.models import Reference, parse_references
+from training.preprocessing.datasets_.models import Reference, parse_references
 
 
 @pytest.mark.parametrize(
