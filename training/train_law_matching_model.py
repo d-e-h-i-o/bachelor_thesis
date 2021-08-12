@@ -5,15 +5,16 @@ from transformers import (
     AutoTokenizer,
     DataCollatorForTokenClassification,
 )
-from preprocessing import Preprocessor
-from preprocessing.datasets import ClaimExtractionDatasets
 
-from utils import eval_k_fold, compute_metrics
+from preprocessing import Preprocessor
+from preprocessing.datasets import LawMatchingDatasets
+
+from .utils import eval_k_fold, compute_metrics
 
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
 args = TrainingArguments(
-    f"test-claim-extraction",
+    f"test-law_matching",
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     per_device_train_batch_size=4,
@@ -24,10 +25,10 @@ args = TrainingArguments(
 
 
 def train():
-    datasets = ClaimExtractionDatasets.load_from_database()
+    datasets = LawMatchingDatasets.load_from_database()
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
     data_collator = DataCollatorForTokenClassification(tokenizer)
-    preprocessor = Preprocessor(tokenizer, "claim_extraction")
+    preprocessor = Preprocessor(tokenizer)
     results = []
 
     for i, (train_split, test_split) in enumerate(datasets.folds):
