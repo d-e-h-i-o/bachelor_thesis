@@ -12,7 +12,7 @@ def test_claim_extraction_dataset_should_group_rows():
     datasets = ClaimExtractionDatasets.load_from_database(
         database="tests/fixtures/database_fixture.db"
     )
-    assert len(datasets.X) == 44
+    assert len(datasets.X) == 45
     assert isinstance(datasets.X[0][0], str)  # fulltext
     assert isinstance(datasets.X[0][1], list)  # list of (claim_start, claim_end) tuples
     assert isinstance(datasets.X[0][1][0], tuple)  # (claim_start, claim_end) tuple
@@ -23,8 +23,9 @@ def test_claim_extraction_dataset_folds():
     datasets = ClaimExtractionDatasets.load_from_database(
         database="tests/fixtures/database_fixture.db", folds=5
     )
-    for train_split, test_split in datasets.folds:
-        train = datasets.X[train_split]
-        test = datasets.X[test_split]
+    for train, test in datasets.folds:
         assert 35 <= len(train) <= 36
         assert 8 <= len(test) <= 9
+
+    assert len(datasets.train) == 33
+    assert len(datasets.test) == 12

@@ -5,7 +5,7 @@ from typing import List, Tuple, Generator
 
 import numpy as np
 from numpy.typing import NDArray
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, ShuffleSplit
 
 ClaimExtractionSample = Tuple[str, List[Tuple[int, int]]]
 
@@ -14,9 +14,13 @@ class ClaimExtractionDatasets:
     """Loads the claim extraction data from the db, groups it, and returns folds
     Usage:
         datasets = ClaimExtractionDatasets.load_from_database()
-        for train_split, test_split in datasets.folds:
-            train = datasets.X[train_split]
-            test = datasets.X[test_split]
+        for train, test in datasets.folds:
+            # preprocess train and test set
+
+    or (without folds):
+        datasets = ClaimExtractionDatasets.load_from_database()
+        train = datasets.train
+        test = datasets.test
     """
 
     TASK = "claim_extraction"
@@ -24,10 +28,22 @@ class ClaimExtractionDatasets:
     def __init__(self, rows, folds):
         self.kf = KFold(n_splits=folds)
         self.X = self.group_rows(rows)
+        self.train_split, self.test_split = next(
+            ShuffleSplit(n_splits=1, test_size=0.25).split(self.X)
+        )
 
     @property
-    def folds(self) -> Generator:
-        return self.kf.split(self.X)
+    def folds(self):
+        for train_split, test_split in self.kf.split(self.X):
+            yield self.X[train_split], self.X[test_split]
+
+    @property
+    def train(self) -> NDArray[ClaimExtractionSample]:
+        return self.X[self.train_split]
+
+    @property
+    def test(self) -> NDArray[ClaimExtractionSample]:
+        return self.X[self.test_split]
 
     @classmethod
     def group_rows(cls, rows) -> NDArray[ClaimExtractionSample]:

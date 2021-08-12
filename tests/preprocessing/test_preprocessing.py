@@ -68,8 +68,6 @@ def test_preprocessor_end_to_end_claim_extraction(claim_extraction_datasets):
 
     dataset = claim_extraction_datasets.X
     input = preprocessor(dataset)
-    assert input["input_ids"]
-    assert input["labels"]
 
 
 @vcr.use_cassette("tests/vcr/tokenizer")
@@ -79,5 +77,3 @@ def test_preprocessor_end_to_end_law_matching(law_matching_datasets):
 
     dataset = law_matching_datasets.X[slice(0, 10)]
     input = preprocessor(dataset)
-    assert isinstance(input["input_ids"], list)
-    assert isinstance(input["labels"], list)
