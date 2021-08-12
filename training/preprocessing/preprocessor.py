@@ -119,7 +119,7 @@ class Preprocessor:
         input_ids: List[int],
         offset_mapping: List[Offset],
         claim_offsets: List[Offset],
-    ) -> NDArray[int]:
+    ) -> List[int]:
         """Takes a list of input ids, offset mapping from the tokenizer, and (claim_start, claim_end) tuples,
         that mark the offset for the original text. Returns a list with labels in BIO schema for the tokenized text."""
         labels = np.zeros(len(input_ids))
@@ -143,7 +143,7 @@ class Preprocessor:
             labels[start] = 1
             labels[slice(start + 1, end + 1)] = 2
 
-        return labels
+        return labels.astype(int).tolist()
 
     def preprocess_law_matching(self, X: RawLawMatchingDataset) -> CustomDataset:
 
