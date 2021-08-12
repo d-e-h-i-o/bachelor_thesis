@@ -1,4 +1,5 @@
 import typer
+import numpy as np
 from transformers import (
     AutoModelForTokenClassification,
     TrainingArguments,
@@ -13,6 +14,17 @@ from utils import eval_k_fold, compute_metrics
 
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
+
+
+def inspect_sample(sample, model, tokenizer):
+    output = model(
+        input_ids=sample["input_ids"].unsqueeze(0).cuda(),
+        attention_mask=sample["attention_mask"].unsqueeze(0).cuda(),
+    )
+    pred = np.argmax(output.logits.cpu().detach().numpy(), axis=2)
+    text_raw = sample["input_ids"].detach().numpy()
+    text_raw[pred[0] == 0] = 0
+    return tokenizer.decode(text_raw)
 
 
 def main(epochs: int = 3, cross_validation: bool = True, inspect: bool = False):
