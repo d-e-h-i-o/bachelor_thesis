@@ -64,7 +64,7 @@ class Preprocessor:
                 sample_offsets.append(chunked_offsets)
 
         tokenized_inputs = self.tokenizer(
-            samples, return_offsets_mapping=True, truncation=True
+            samples, return_offsets_mapping=True, truncation=True, padding=True
         )
 
         tokenized_inputs["labels"] = []
