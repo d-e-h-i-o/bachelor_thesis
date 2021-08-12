@@ -23,7 +23,7 @@ class CustomDataset(Dataset):
         self.X = X
 
     def __len__(self):
-        return len(self.X)
+        return len(self.X["input_ids"])
 
     def __getitem__(self, idx):
         return {
