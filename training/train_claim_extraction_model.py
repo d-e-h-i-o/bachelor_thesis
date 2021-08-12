@@ -5,11 +5,10 @@ from transformers import (
     AutoTokenizer,
     DataCollatorForTokenClassification,
 )
-
 from preprocessing import Preprocessor
 from preprocessing.datasets import ClaimExtractionDatasets
 
-from .utils import eval_k_fold, compute_metrics
+from utils import eval_k_fold, compute_metrics
 
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
