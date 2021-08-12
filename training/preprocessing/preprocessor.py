@@ -26,7 +26,11 @@ class CustomDataset(Dataset):
         return len(self.X)
 
     def __getitem__(self, idx):
-        return self.X[idx]
+        return {
+            "input_ids": self.X["input_ids"][idx],
+            "attention_mask": self.X["attention_mask"][idx],
+            "labels": self.X["labels"][idx],
+        }
 
 
 class Preprocessor:
