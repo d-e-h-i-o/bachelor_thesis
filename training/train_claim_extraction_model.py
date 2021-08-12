@@ -13,7 +13,7 @@ from utils import eval_k_fold, compute_metrics
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
 args = TrainingArguments(
-    f"test-claim-extraction",
+    f"/data/experiments/dehio/models/test-claim-extraction",
     evaluation_strategy="epoch",
     learning_rate=2e-5,
     per_device_train_batch_size=4,
