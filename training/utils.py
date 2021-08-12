@@ -34,7 +34,18 @@ def compute_metrics(p):
     predictions, labels = p
     predictions = np.argmax(predictions, axis=2)
 
-    results = metric.compute(predictions=predictions, references=labels)
+    label_list = ["O", "B", "I"]
+
+    true_predictions = [
+        [label_list[p] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
+    true_labels = [
+        [label_list[l] for (p, l) in zip(prediction, label) if l != -100]
+        for prediction, label in zip(predictions, labels)
+    ]
+
+    results = metric.compute(predictions=true_predictions, references=true_labels)
     return {
         "precision": results["overall_precision"],
         "recall": results["overall_recall"],
