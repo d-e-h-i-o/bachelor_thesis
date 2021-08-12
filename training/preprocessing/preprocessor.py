@@ -4,7 +4,7 @@ import numpy as np
 from numpy.typing import NDArray
 from torch.utils.data import Dataset
 
-from preprocessing.datasets import LawMatchingSample
+from training.preprocessing.datasets import LawMatchingSample
 
 Offset = Tuple[int, int]
 RawClaimExtractionDataset = NDArray[Tuple[str, List[Offset]]]

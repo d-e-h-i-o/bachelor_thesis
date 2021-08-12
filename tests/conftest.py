@@ -1,6 +1,6 @@
 import pytest
 
-from preprocessing.datasets import LawMatchingDatasets, ClaimExtractionDatasets
+from training.preprocessing.datasets import LawMatchingDatasets, ClaimExtractionDatasets
 
 
 @pytest.fixture(scope="session")
