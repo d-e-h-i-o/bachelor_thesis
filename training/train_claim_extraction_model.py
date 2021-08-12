@@ -26,7 +26,6 @@ args = TrainingArguments(
 def train():
     datasets = ClaimExtractionDatasets.load_from_database()
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-    data_collator = DataCollatorForTokenClassification(tokenizer)
     preprocessor = Preprocessor(tokenizer, "claim_extraction")
     results = []
 
@@ -41,7 +40,6 @@ def train():
             args,
             train_dataset=train_dataset,
             eval_dataset=test_dataset,
-            data_collator=data_collator,
             tokenizer=tokenizer,
             compute_metrics=compute_metrics,
         )
