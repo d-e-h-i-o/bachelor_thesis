@@ -1,4 +1,3 @@
-import typer
 import numpy as np
 from transformers import (
     AutoModelForTokenClassification,
@@ -27,7 +26,9 @@ def inspect_sample(sample, model, tokenizer):
     return tokenizer.decode(text_raw)
 
 
-def main(epochs: int = 3, cross_validation: bool = True, inspect: bool = False):
+def train_claim_extraction(
+    epochs: int = 3, cross_validation: bool = True, inspect: bool = False
+):
     args = TrainingArguments(
         f"/data/experiments/dehio/models/test-claim-extraction",
         evaluation_strategy=IntervalStrategy.EPOCH,
@@ -87,7 +88,3 @@ def main(epochs: int = 3, cross_validation: bool = True, inspect: bool = False):
         results.append(result)
 
         print(f"Results: {result}")
-
-
-if __name__ == "__main__":
-    typer.run(main)
