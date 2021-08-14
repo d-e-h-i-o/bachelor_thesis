@@ -77,7 +77,12 @@ class Preprocessor:
             offset_mapping = tokenized_inputs["offset_mapping"][i]
             claim_offsets = sample_offsets[i]
             tokenized_inputs["labels"].append(
-                self.align_claim_labels(input_ids, offset_mapping, claim_offsets),
+                self.align_claim_labels(
+                    input_ids,
+                    offset_mapping,
+                    claim_offsets,
+                    self.tokenizer.pad_token_id,
+                ),
             )
         return CustomDataset(tokenized_inputs)
 
@@ -123,6 +128,7 @@ class Preprocessor:
         input_ids: List[int],
         offset_mapping: List[Offset],
         claim_offsets: List[Offset],
+        pad_token_id: int,
     ) -> List[int]:
         """Takes a list of input ids, offset mapping from the tokenizer, and (claim_start, claim_end) tuples,
         that mark the offset for the original text. Returns a list with labels in BIO schema for the tokenized text."""
@@ -146,6 +152,9 @@ class Preprocessor:
                 )
             labels[start] = 1
             labels[slice(start + 1, end + 1)] = 2
+        labels[
+            np.array(input_ids) == pad_token_id
+        ] = -100  # to exclude pad tokens from loss prediction
 
         return labels.astype(int).tolist()
 

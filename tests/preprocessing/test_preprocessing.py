@@ -41,7 +41,7 @@ def test_preprocessor_align_claim_label_works():
     tokenizer = MagicMock()
     preprocessor = Preprocessor(tokenizer, "claim_extraction")
 
-    input_ids = [102, 8862, 818, 7679, 16300, 30881, 1420, 28237, 103]
+    input_ids = [102, 8862, 818, 7679, 16300, 30881, 1420, 28237, 103, 0, 0]
     offset_mapping = [
         (0, 0),
         (0, 2),
@@ -55,9 +55,11 @@ def test_preprocessor_align_claim_label_works():
     ]
     claim_offsets = [(4, 11), (15, 21)]
 
-    expected_labels = np.array([0, 0, 0, 1, 2, 2, 0, 1, 0])
+    expected_labels = np.array([0, 0, 0, 1, 2, 2, 0, 1, 0, -100, -100])
 
-    labels = preprocessor.align_claim_labels(input_ids, offset_mapping, claim_offsets)
+    labels = preprocessor.align_claim_labels(
+        input_ids, offset_mapping, claim_offsets, 0
+    )
     assert (labels == expected_labels).all()
 
 
