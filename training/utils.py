@@ -1,7 +1,7 @@
 import numpy as np
 from datasets import load_metric
 
-metric = load_metric("seqeval")
+metric = load_metric("seqeval", "IOB2")
 
 
 def eval_k_fold(results):
