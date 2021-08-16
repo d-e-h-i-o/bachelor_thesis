@@ -20,25 +20,6 @@ model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
 
 
-def inspect_sample(sample, model, tokenizer):
-    output = model(
-        input_ids=sample["input_ids"].unsqueeze(0).cuda(),
-        attention_mask=sample["attention_mask"].unsqueeze(0).cuda(),
-    )
-    pred = np.argmax(output.logits.cpu().detach().numpy(), axis=2)
-    original_text_raw = sample["input_ids"].detach().numpy().copy()
-    text_raw = original_text_raw.copy()
-    original_text_raw[np.array(sample["labels"]) == 0] = 0
-    text_raw[pred[0] == 0] = 0
-    print("Target text:\n")
-    print(tokenizer.decode(original_text_raw))
-    print("Inferred text:")
-    print(tokenizer.decode(text_raw))
-    print("Predictions:")
-    print(pred)
-    print(compute_metrics((pred, sample["labels"])))
-
-
 def train_claim_extraction(
     epochs: int = 3,
     cross_validation: bool = True,
@@ -118,6 +99,30 @@ def train_claim_extraction(
         )
         trainer.train()
         if inspect:
+
+            def inspect_sample(nr: int):
+                output = model(
+                    input_ids=test_dataset[nr]["input_ids"].unsqueeze(0).cuda(),
+                    attention_mask=test_dataset[nr]["attention_mask"]
+                    .unsqueeze(0)
+                    .cuda(),
+                )
+                logits = output.logits.cpu().detach().numpy()
+                pred = np.argmax(logits, axis=2)
+                original_text_raw = (
+                    test_dataset[nr]["input_ids"].detach().numpy().copy()
+                )
+                text_raw = original_text_raw.copy()
+                original_text_raw[np.array(test_dataset[nr]["labels"]) == 0] = 0
+                text_raw[pred[0] == 0] = 0
+                print("Target text:\n")
+                print(tokenizer.decode(original_text_raw))
+                print("Inferred text:")
+                print(tokenizer.decode(text_raw))
+                print("Predictions:")
+                print(pred)
+                print(compute_metrics(([logits], [test_dataset[nr]["labels"]])))
+
             breakpoint()
         result = trainer.evaluate()
         print(f"Results: {result}")
