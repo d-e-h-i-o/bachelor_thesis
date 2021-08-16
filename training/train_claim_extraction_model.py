@@ -1,4 +1,5 @@
 import numpy as np
+from datasets import load_metric
 from transformers import (
     AutoModelForTokenClassification,
     TrainingArguments,
@@ -99,6 +100,7 @@ def train_claim_extraction(
         )
         trainer.train()
         if inspect:
+            metric = load_metric("seqeval", "IOB2")
 
             def inspect_sample(nr: int):
                 output = model(
@@ -121,7 +123,20 @@ def train_claim_extraction(
                 print(tokenizer.decode(text_raw))
                 print("Predictions:")
                 print(pred)
-                print(compute_metrics(([logits], [test_dataset[nr]["labels"]])))
+                label_list = ["O", "B", "I"]
+                true_predictions = [
+                    label_list[p]
+                    for (p, l) in zip(pred, test_dataset[nr]["labels"])
+                    if l != -100
+                ]
+                true_labels = [
+                    label_list[l]
+                    for (p, l) in zip(pred, test_dataset[nr]["labels"])
+                    if l != -100
+                ]
+                print(
+                    metric.compute(predictions=true_predictions, references=true_labels)
+                )
 
             breakpoint()
         result = trainer.evaluate()
