@@ -49,7 +49,7 @@ def run():
         annotation = Annotation(annotation)
         annotation, plaintext = clean_data(annotation, plaintext)
         save_to_database(annotation, plaintext)
-        print(f"Processed annotation with id {annotation['id']}")
+        print(f"Processed annotation with id {annotation.id}")
 
 
 @app.command()
