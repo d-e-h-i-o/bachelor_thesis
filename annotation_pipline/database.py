@@ -26,7 +26,7 @@ def fulltext_exists(url: str) -> bool:
 def _save_extraction_data(annotation, plaintext) -> None:
     cursor.execute(
         "INSERT INTO claims VALUES(?, ?, ?)",
-        (annotation.id, annotation.context_claim, annotation.url),
+        (annotation.id, annotation.claim, annotation.url),
     )
     if plaintext != "" and not fulltext_exists(annotation.url):
         cursor.execute(
