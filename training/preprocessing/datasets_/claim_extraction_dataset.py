@@ -1,7 +1,8 @@
 import sqlite3
+import pickle
 from operator import itemgetter
 from itertools import groupby
-from typing import List, Tuple, Generator
+from typing import List, Tuple
 
 import numpy as np
 from numpy.typing import NDArray
@@ -77,3 +78,7 @@ class ClaimExtractionDatasets:
         rows = cursor.fetchall()
         cursor.close()
         return cls(rows, folds=folds)
+
+    def save_to_disk(self, file_path):
+        with open(file_path, "w") as file:
+            pickle.dump(self, file)
