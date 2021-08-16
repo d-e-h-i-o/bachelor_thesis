@@ -36,6 +36,7 @@ def inspect_sample(sample, model, tokenizer):
     print(tokenizer.decode(text_raw))
     print("Predictions:")
     print(pred)
+    print(compute_metrics((pred, sample["labels"])))
 
 
 def train_claim_extraction(
