@@ -30,7 +30,7 @@ class ClaimExtractionDatasets:
         self.kf = KFold(n_splits=folds)
         self.X = self.group_rows(rows)
         self.train_split, self.test_split = next(
-            ShuffleSplit(n_splits=1, test_size=0.25).split(self.X)
+            ShuffleSplit(n_splits=1, test_size=0.15).split(self.X)
         )
 
     @property
