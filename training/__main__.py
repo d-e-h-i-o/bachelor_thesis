@@ -11,8 +11,11 @@ def claim_extraction(
     cross_validation: bool = True,
     inspect: bool = False,
     learning_rate: float = 2e-5,
+    filter_examples_without_claims: bool = False,
 ):
-    train_claim_extraction(epochs, cross_validation, inspect, learning_rate)
+    train_claim_extraction(
+        epochs, cross_validation, inspect, learning_rate, filter_examples_without_claims
+    )
 
 
 @app.command()

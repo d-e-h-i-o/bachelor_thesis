@@ -9,7 +9,12 @@ from transformers import (
 from preprocessing import Preprocessor
 from preprocessing.datasets_ import ClaimExtractionDatasets
 
-from utils import eval_k_fold, compute_metrics, report_one_pass_results
+from utils import (
+    eval_k_fold,
+    compute_metrics,
+    report_one_pass_results,
+    num_of_examples_without_claims,
+)
 
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
@@ -38,6 +43,7 @@ def train_claim_extraction(
     cross_validation: bool = True,
     inspect: bool = False,
     learning_rate: float = 2e-5,
+    filter_examples_without_claims: bool = False,
 ):
     args = TrainingArguments(
         f"/data/experiments/dehio/models/test-claim-extraction",
@@ -81,8 +87,26 @@ def train_claim_extraction(
         model = AutoModelForTokenClassification.from_pretrained(
             model_checkpoint, num_labels=3
         )
+
         train_dataset = preprocessor(datasets.train)
         test_dataset = preprocessor(datasets.test)
+
+        print(
+            "Examples with no claims in train dataset:",
+            num_of_examples_without_claims(train_dataset),
+        )
+        print(
+            "Examples with no claims in test dataset:",
+            num_of_examples_without_claims(test_dataset),
+        )
+        if filter_examples_without_claims:
+            train_dataset = np.array(
+                [
+                    e
+                    for e in train_dataset
+                    if sum(filter(lambda x: x >= 0, e["labels"])) > 0
+                ]
+            )
         trainer = Trainer(
             model,
             args,

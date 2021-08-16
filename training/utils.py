@@ -71,3 +71,7 @@ def report_one_pass_results(dataset, results, parameters):
     with open("results/{name}/results.txt", "w") as file:
         file.write(str(results))
         file.write(str(parameters))
+
+
+def num_of_examples_without_claims(dataset):
+    return len([e for e in dataset if sum(filter(lambda x: x >= 0, e["labels"])) == 0])
