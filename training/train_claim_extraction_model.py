@@ -21,9 +21,16 @@ def inspect_sample(sample, model, tokenizer):
         attention_mask=sample["attention_mask"].unsqueeze(0).cuda(),
     )
     pred = np.argmax(output.logits.cpu().detach().numpy(), axis=2)
-    text_raw = sample["input_ids"].detach().numpy()
+    original_text_raw = sample["input_ids"].detach().numpy()
+    original_text_raw[np.array(sample["labels"]) == 0] = 0
+    text_raw = original_text_raw.copy()
     text_raw[pred[0] == 0] = 0
-    return tokenizer.decode(text_raw)
+    print("Target text:\n")
+    print(tokenizer.decode(original_text_raw))
+    print("Inferred text:")
+    print(tokenizer.decode(text_raw))
+    print("Predictions:")
+    print(pred)
 
 
 def train_claim_extraction(
