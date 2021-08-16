@@ -81,3 +81,9 @@ def fetch_for_healthcheck():
     return connection.execute(
         "SELECT annotation_id, claim, plaintext FROM fulltext f join claims c on f.url=c.url"
     ).fetchall()
+
+
+def fetch_for_claim_extraction_healthcheck():
+    return connection.execute(
+        "SELECT f.url, claim, plaintext FROM fulltext f join claims c on f.url=c.url"
+    ).fetchall()

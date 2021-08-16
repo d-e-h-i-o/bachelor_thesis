@@ -14,6 +14,7 @@ from database import (
     update_claim,
     update_fulltext,
     fetch_for_healthcheck,
+    fetch_for_claim_extraction_healthcheck,
 )
 
 app = typer.Typer()
@@ -48,6 +49,8 @@ def run():
         plaintext = fetch_plaintext(annotation["uri"])
         annotation = Annotation(annotation)
         annotation, plaintext = clean_data(annotation, plaintext)
+        if annotation.claim not in plaintext:
+            print(f"Claim {annotation.claim} not found in plaintext.")
         save_to_database(annotation, plaintext)
         print(f"Processed annotation with id {annotation.id}")
 
@@ -64,7 +67,7 @@ def clean():
 
 
 @app.command()
-def healthcheck(verbose: bool = False):
+def healthcheck(verbose: bool = False, for_claim_extraction: bool = False):
     count = 0
     for annotation_id, claim, plaintext in fetch_for_healthcheck():
         if claim not in plaintext:
@@ -74,6 +77,26 @@ def healthcheck(verbose: bool = False):
                 print(claim)
                 print(plaintext)
     print(f"Claims not in plaintext: {count}")
+
+    if for_claim_extraction:
+        claims = {}
+        urls = {}
+        for url, claim, plaintext in fetch_for_claim_extraction_healthcheck():
+            if url not in urls:
+                urls[url] = plaintext
+            if url in claims:
+                claims[url].append(claim)
+            else:
+                claims[url] = [claim]
+
+        for url in urls:
+            plaintext = urls[url]
+            for claim in claims[url]:
+                plaintext = plaintext.replace(claim, "")
+            print()
+            print(url)
+            print(plaintext)
+            print()
 
 
 if __name__ == "__main__":
