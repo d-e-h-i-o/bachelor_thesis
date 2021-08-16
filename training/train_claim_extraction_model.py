@@ -34,12 +34,15 @@ def inspect_sample(sample, model, tokenizer):
 
 
 def train_claim_extraction(
-    epochs: int = 3, cross_validation: bool = True, inspect: bool = False
+    epochs: int = 3,
+    cross_validation: bool = True,
+    inspect: bool = False,
+    learning_rate: float = 2e-5,
 ):
     args = TrainingArguments(
         f"/data/experiments/dehio/models/test-claim-extraction",
         evaluation_strategy=IntervalStrategy.EPOCH,
-        learning_rate=2e-5,
+        learning_rate=learning_rate,
         per_device_train_batch_size=4,
         per_device_eval_batch_size=4,
         per_gpu_train_batch_size=1,
@@ -92,7 +95,7 @@ def train_claim_extraction(
         if inspect:
             breakpoint()
         result = trainer.evaluate()
-        parameter = {"epochs": epochs, "learning_rate": 2e-5}
+        parameter = {"epochs": epochs, "learning_rate": learning_rate}
         report_one_pass_results(datasets, result, parameter)
 
         print(f"Results: {result}")

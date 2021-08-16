@@ -7,9 +7,12 @@ app = typer.Typer()
 
 @app.command()
 def claim_extraction(
-    epochs: int = 3, cross_validation: bool = True, inspect: bool = False
+    epochs: int = 3,
+    cross_validation: bool = True,
+    inspect: bool = False,
+    learning_rate: float = 2e-5,
 ):
-    train_claim_extraction(epochs, cross_validation, inspect)
+    train_claim_extraction(epochs, cross_validation, inspect, learning_rate)
 
 
 @app.command()
