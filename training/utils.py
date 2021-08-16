@@ -1,3 +1,6 @@
+import os
+from datetime import datetime
+
 import numpy as np
 from datasets import load_metric
 
@@ -52,3 +55,19 @@ def compute_metrics(p):
         "f1": results["overall_f1"],
         "accuracy": results["overall_accuracy"],
     }
+
+
+def report_cross_validation_results():
+    pass
+
+
+def report_one_pass_results(dataset, results, parameters):
+    if not os.path.exists("results"):
+        os.mkdir("results")
+    name = f'Run: {datetime.today().strftime("%c")}'
+    os.mkdir("name")
+    dataset.save_to_disk(f"results/{name}/dataset")
+
+    with open("results/{name}/results.txt", "w") as file:
+        file.write(str(results))
+        file.write(str(parameters))

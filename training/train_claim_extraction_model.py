@@ -9,7 +9,7 @@ from transformers import (
 from preprocessing import Preprocessor
 from preprocessing.datasets_ import ClaimExtractionDatasets
 
-from utils import eval_k_fold, compute_metrics
+from utils import eval_k_fold, compute_metrics, report_one_pass_results
 
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
@@ -92,6 +92,7 @@ def train_claim_extraction(
         if inspect:
             breakpoint()
         result = trainer.evaluate()
-        results.append(result)
+        parameter = {"epochs": epochs, "learning_rate": 2e-5}
+        report_one_pass_results(datasets, result, parameter)
 
         print(f"Results: {result}")
