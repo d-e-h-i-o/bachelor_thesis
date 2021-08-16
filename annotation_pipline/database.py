@@ -1,7 +1,6 @@
 import sqlite3
 from datetime import datetime
-
-from annotation import Annotation
+from typing import List, Tuple
 
 connection = sqlite3.connect("database.db")
 cursor = connection.cursor()
@@ -42,8 +41,7 @@ def _save_matching_data(annotation) -> None:
     )
 
 
-def save_to_database(raw_annotation, plaintext) -> None:
-    annotation = Annotation(raw_annotation)
+def save_to_database(annotation, plaintext) -> None:
     if (
         not plaintext or plaintext.find(annotation.claim) == -1
     ) and not fulltext_exists(annotation.url):
@@ -57,3 +55,29 @@ def save_to_database(raw_annotation, plaintext) -> None:
     if annotation.for_law_matching and annotation.date:
         _save_matching_data(annotation)
     connection.commit()
+
+
+def fetch_all_claims() -> List[Tuple]:
+    return cursor.execute("SELECT * from claims").fetchall()
+
+
+def fetch_all_fulltext() -> List[Tuple]:
+    return cursor.execute("SELECT * from fulltext").fetchall()
+
+
+def update_claim(claim, annotation_id):
+    connection.execute(
+        "UPDATE claims SET claim=? WHERE annotation_id=?", (claim, annotation_id)
+    )
+    connection.commit()
+
+
+def update_fulltext(plaintext, url):
+    connection.execute("UPDATE fulltext SET plaintext=? WHERE url=?", (plaintext, url))
+    connection.commit()
+
+
+def fetch_for_healthcheck():
+    return connection.execute(
+        "SELECT annotation_id, claim, plaintext FROM fulltext f join claims c on f.url=c.url"
+    ).fetchall()
