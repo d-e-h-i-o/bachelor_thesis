@@ -21,9 +21,9 @@ def inspect_sample(sample, model, tokenizer):
         attention_mask=sample["attention_mask"].unsqueeze(0).cuda(),
     )
     pred = np.argmax(output.logits.cpu().detach().numpy(), axis=2)
-    original_text_raw = sample["input_ids"].detach().numpy()
-    original_text_raw[np.array(sample["labels"]) == 0] = 0
+    original_text_raw = sample["input_ids"].detach().numpy().copy()
     text_raw = original_text_raw.copy()
+    original_text_raw[np.array(sample["labels"]) == 0] = 0
     text_raw[pred[0] == 0] = 0
     print("Target text:\n")
     print(tokenizer.decode(original_text_raw))
