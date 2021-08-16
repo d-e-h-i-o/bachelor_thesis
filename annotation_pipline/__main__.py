@@ -30,6 +30,9 @@ def clean_string(string: str) -> str:
         .replace(" ,", ",")
         .strip()
     )
+    string = re.sub(r"\?(?=\S)", "? ", string)
+    string = re.sub(r":(?=\S)", ": ", string)
+    string = re.sub(r"\s+", " ", string)
     return string
 
 
