@@ -21,7 +21,13 @@ app = typer.Typer()
 
 def clean_string(string: str) -> str:
     string = (
-        re.sub(r"\n\s*", " ", string).replace("\n", " ").replace("\xa0", " ").strip()
+        re.sub(r"\n\s*", " ", string)
+        .replace("\n", " ")
+        .replace("\xa0", " ")
+        .replace("  ", ".")
+        .replace(" .", ".")
+        .replace(" ,", ",")
+        .strip()
     )
     return string
 
