@@ -62,13 +62,14 @@ def report_cross_validation_results():
 
 
 def report_one_pass_results(dataset, results, parameters):
-    if not os.path.exists("results"):
-        os.mkdir("results")
+    path = "/data/experiments/dehio/results"
+    if not os.path.exists(path):
+        os.mkdir(path)
     name = f'Run: {datetime.today().strftime("%c")}'
     os.mkdir("name")
-    dataset.save_to_disk(f"results/{name}/dataset")
+    dataset.save_to_disk(path + f"/{name}/dataset")
 
-    with open("results/{name}/results.txt", "w") as file:
+    with open(path + "results/{name}/results.txt", "w") as file:
         file.write(str(results))
         file.write(str(parameters))
 

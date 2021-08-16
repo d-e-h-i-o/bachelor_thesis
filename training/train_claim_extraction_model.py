@@ -120,7 +120,7 @@ def train_claim_extraction(
         if inspect:
             breakpoint()
         result = trainer.evaluate()
+        print(f"Results: {result}")
+
         parameter = {"epochs": epochs, "learning_rate": learning_rate}
         report_one_pass_results(datasets, result, parameter)
-
-        print(f"Results: {result}")
