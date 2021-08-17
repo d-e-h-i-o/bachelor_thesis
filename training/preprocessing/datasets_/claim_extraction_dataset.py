@@ -4,6 +4,7 @@ from operator import itemgetter
 from itertools import groupby
 from typing import List, Tuple
 
+import spacy
 import numpy as np
 from numpy.typing import NDArray
 from sklearn.model_selection import KFold, ShuffleSplit
@@ -31,8 +32,9 @@ class ClaimExtractionDatasets:
         self.kf = KFold(n_splits=folds)
         self.X: List[ClaimExtractionSample] = []
         grouped_rows = self.group_rows(rows)
+        nlp = spacy.load("de_core_news_sm")
         for sample_text, claim_offsets in grouped_rows:
-            chunks = self.chunk_fulltext(sample_text, claim_offsets)
+            chunks = self.chunk_fulltext(sample_text, claim_offsets, nlp)
             for sample in chunks:
                 self.X.append(sample)
 
@@ -78,41 +80,42 @@ class ClaimExtractionDatasets:
 
     @staticmethod
     def chunk_fulltext(
-        fulltext: str, claims: List[Offset]
+        fulltext: str, claims: List[Offset], nlp: spacy.Language
     ) -> List[Tuple[str, List[Offset]]]:
         """Split article fulltext into smaller chunks (max. 512 tokens), with the condition that
         every claim is fully contained in one chunk."""
-        length = 2300  # this is a heuristic
-        offset = 0
+        max_length = 2300  # this is a heuristic
+        sents = nlp(fulltext).sents
         chunks = []
+        return_list = []
 
-        for i in range(0, len(fulltext), length):
-            chunk_last = i + length
-            chunk = fulltext[i - offset : chunk_last]
-            chunk_claims = []
+        current_chunk = ""
+        for sentence in sents:
+            if len(current_chunk) > max_length:
+                chunk_start: int = fulltext.find(current_chunk)
+                chunk_end: int = chunk_start + len(current_chunk)
+                for claim_start, claim_end in claims:
+                    if claim_start < chunk_end < claim_end:
+                        # we found a overlapping claim. continue making a chunk
+                        break
+                else:
+                    # no overlapping claims! let's move on to the next chunk
+                    chunks.append(current_chunk)
+                    current_chunk = ""
+            current_chunk += " " + str(sentence)
+        chunks.append(current_chunk)
 
-            next_offset = None
+        for chunk in chunks:
+            chunk_claim_offsets = []
             for claim_start, claim_end in claims:
-                if claim_start < chunk_last < claim_end:
-                    # overlapping claim
-                    next_offset = chunk_last - claim_start
-                    chunk_last = claim_start
-                    chunk = fulltext[(i - offset) : chunk_last]
-                    break
-
-            for claim_start, claim_end in claims:
-                # add claims that are fully contained in chunk
-                claim = fulltext[claim_start:claim_end]
+                claim = fulltext[slice(claim_start, claim_end)]
                 if claim in chunk:
-                    # offsets have to be newly calculated for the chunk
-                    new_start: int = chunk.find(claim)
-                    new_end: int = new_start + len(claim)
-                    chunk_claims.append((new_start, new_end))
+                    start: int = chunk.find(claim)
+                    end: int = start + len(claim)
+                    chunk_claim_offsets.append((start, end))
+            return_list.append((chunk, chunk_claim_offsets))
 
-            offset = next_offset or 0
-            chunks.append((chunk, chunk_claims))
-
-        return chunks
+        return return_list
 
     @classmethod
     def load_from_database(cls, database="database.db", folds=5):

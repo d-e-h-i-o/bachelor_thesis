@@ -1,17 +1,21 @@
 import sqlite3
 
 import pytest
+import spacy
 
 from training.preprocessing.datasets_ import ClaimExtractionDatasets
 
 
 @pytest.fixture
-def sample_from_database():
+def rows_from_database():
     connection = sqlite3.connect("tests/fixtures/database_fixture.db")
-    sample = connection.execute(
+    cursor = connection.cursor()
+    cursor.execute(
         "SELECT f.url, plaintext, claim FROM fulltext f INNER JOIN claims c on f.url=c.url"
-    ).fetchone()
-    return sample
+    )
+    rows = cursor.fetchall()
+    cursor.close()
+    return rows
 
 
 def test_claim_extraction_dataset_should_load_from_database():
@@ -44,23 +48,18 @@ def test_claim_extraction_dataset_folds():
     assert len(datasets.test) == 24
 
 
-@pytest.mark.skip
-def test_claim_extracion_datasets_chunking_works(sample_from_database):
-    datasets = ClaimExtractionDatasets.load_from_database(
-        database="tests/fixtures/database_fixture.db", folds=5
-    )
+def test_claim_extraction_datasets_chunking_works(rows_from_database):
 
-    fulltext, claim_offsets = sample_from_database[0], sample_from_database[1]
+    grouped_rows = ClaimExtractionDatasets.group_rows(rows_from_database)
+    sample_text, claim_offsets = grouped_rows[0]
+    nlp = spacy.load("de_core_news_sm")
+    chunks = ClaimExtractionDatasets.chunk_fulltext(sample_text, claim_offsets, nlp)
 
-    chunks = datasets.chunk_fulltext(fulltext, claim_offsets)
-
-    assert (
-        len([claim for chunk, chunk_claims in chunks for claim in chunk_claims]) == 19
+    assert len(
+        [claim for chunk, chunk_claims in chunks for claim in chunk_claims]
+    ) == len(
+        claim_offsets
     )  # all claims are still here
-
-    assert (
-        "".join([chunk_text for chunk_text, chunk_claims in chunks]) == fulltext
-    )  # all chunks together form the fulltext
 
     for chunk_text, _ in chunks:
         assert len(chunk_text) <= 2550
