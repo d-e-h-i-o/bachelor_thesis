@@ -73,7 +73,7 @@ class ClaimExtractionDatasets:
                     start: int = fulltext.find(claim)
                     end: int = start + len(claim)
                     article[1].append((start, end))
-            if article[1]:
+            if article[0] and article[1]:
                 return_list.append(article)
 
         return np.array(return_list, dtype=object)
