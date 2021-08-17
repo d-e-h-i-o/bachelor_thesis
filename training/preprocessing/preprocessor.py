@@ -55,16 +55,14 @@ class Preprocessor:
         tokenizes them, aligns the claim indexes with the tokenized text, and returns
         a torch Dataset.
         """
-        samples = []
+        samples_texts = []
         sample_offsets = []
         for sample_text, claim_offsets in X:
-            chunks = self.chunk_fulltext(sample_text, claim_offsets)
-            for chunked_text, chunked_offsets in chunks:
-                samples.append(chunked_text)
-                sample_offsets.append(chunked_offsets)
+            samples_texts.append(sample_text)
+            sample_offsets.append(claim_offsets)
 
         tokenized_inputs = self.tokenizer(
-            samples,
+            samples_texts,
             return_offsets_mapping=True,
             truncation=True,
             padding=True,
@@ -85,43 +83,6 @@ class Preprocessor:
                 ),
             )
         return CustomDataset(tokenized_inputs)
-
-    @staticmethod
-    def chunk_fulltext(
-        fulltext: str, claims: List[Offset]
-    ) -> List[Tuple[str, List[Offset]]]:
-        """Split article fulltext into smaller chunks (max. 512 tokens), with the condition that
-        every claim is fully contained in one chunk."""
-        length = 2300  # this is a heuristic
-        offset = 0
-        chunks = []
-
-        for i in range(0, len(fulltext), length):
-            chunk_last = i + length
-            chunk = fulltext[i - offset : chunk_last]
-            chunk_claims = []
-
-            next_offset = None
-            for claim_start, claim_end in claims:
-                if claim_start <= chunk_last < claim_end:
-                    # overlapping claim
-                    next_offset = chunk_last - claim_start
-                    chunk_last = claim_start
-                    chunk = fulltext[(i - offset) : chunk_last]
-
-            for claim_start, claim_end in claims:
-                # add claims that are fully contained in chunk
-                claim = fulltext[claim_start:claim_end]
-                if claim in chunk:
-                    # offsets have to be newly calculated for the chunk
-                    new_start: int = chunk.find(claim)
-                    new_end: int = new_start + len(claim)
-                    chunk_claims.append((new_start, new_end))
-
-            offset = next_offset or 0
-            chunks.append((chunk, chunk_claims))
-
-        return chunks
 
     @staticmethod
     def align_claim_labels(

@@ -17,26 +17,6 @@ def claim_extraction_sample():
     return datasets.X[0]
 
 
-def test_preprocessor_chunking_works(claim_extraction_sample):
-    tokenizer = MagicMock()
-    preprocessor = Preprocessor(tokenizer, "claim_extraction")
-
-    fulltext, claim_offsets = claim_extraction_sample[0], claim_extraction_sample[1]
-
-    chunks = preprocessor.chunk_fulltext(fulltext, claim_offsets)
-
-    assert (
-        len([claim for chunk, chunk_claims in chunks for claim in chunk_claims]) == 19
-    )  # all claims are still here
-
-    assert (
-        "".join([chunk_text for chunk_text, chunk_claims in chunks]) == fulltext
-    )  # all chunks together form the fulltext
-
-    for chunk_text, _ in chunks:
-        assert len(chunk_text) <= 2550
-
-
 def test_preprocessor_align_claim_label_works():
     tokenizer = MagicMock()
     preprocessor = Preprocessor(tokenizer, "claim_extraction")
