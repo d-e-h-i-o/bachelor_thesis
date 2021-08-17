@@ -31,8 +31,10 @@ def clean_string(string: str) -> str:
         .strip()
     )
     string = re.sub(r"\?(?=\S)", "? ", string)
-    string = re.sub(r":(?=\S)", ": ", string)
+    string = re.sub(r":(?=\S)(?!innen)", ": ", string)
     string = re.sub(r"\s+", " ", string)
+    string = re.sub(r":\s(?=innen)", ":", string)
+    string = re.sub(r"(?<=\S),(?=\S)", ", ", string)
     return string
 
 
@@ -78,7 +80,7 @@ def healthcheck(verbose: bool = False, for_claim_extraction: bool = False):
             if verbose:
                 print(annotation_id)
                 print(claim)
-                print(plaintext)
+                # print(plaintext)
     print(f"Claims not in plaintext: {count}")
 
     if for_claim_extraction:
