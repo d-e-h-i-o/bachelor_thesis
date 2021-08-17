@@ -82,7 +82,7 @@ def healthcheck(verbose: bool = False, for_claim_extraction: bool = False):
             if verbose:
                 print(annotation_id)
                 print(claim)
-                # print(plaintext)
+                print(plaintext)
     print(f"Claims not in plaintext: {count}")
 
     if for_claim_extraction:
