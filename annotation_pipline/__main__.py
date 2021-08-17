@@ -75,6 +75,8 @@ def clean():
 def healthcheck(verbose: bool = False, for_claim_extraction: bool = False):
     count = 0
     for annotation_id, claim, plaintext in fetch_for_healthcheck():
+        if plaintext == "":
+            continue
         if claim not in plaintext:
             count += 1
             if verbose:
