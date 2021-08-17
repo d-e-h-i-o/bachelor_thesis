@@ -69,7 +69,7 @@ def report_one_pass_results(dataset, results, parameters):
     os.mkdir("name")
     dataset.save_to_disk(path + f"/{name}/dataset")
 
-    with open(path + "results/{name}/results.txt", "w") as file:
+    with open(path + "results/{name}/results.txt", "w+") as file:
         file.write(str(results))
         file.write(str(parameters))
 
