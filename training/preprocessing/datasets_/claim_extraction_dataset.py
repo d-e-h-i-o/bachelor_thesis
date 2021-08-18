@@ -1,5 +1,6 @@
 import sqlite3
 import pickle
+import csv
 from operator import itemgetter
 from itertools import groupby
 from typing import List, Tuple
@@ -128,6 +129,15 @@ class ClaimExtractionDatasets:
         cursor.close()
         return cls(rows, folds=folds)
 
-    def save_to_disk(self, file_path):
-        with open(file_path, "w") as file:
-            pickle.dump(self, file)
+    def save_to_disk(self, file_path, with_healtcheck=False):
+        with open(file_path, "w+") as file:
+            writer = csv.writer(file)
+            for row in self.X:
+                writer.writerow(row)
+                if with_healtcheck:
+                    text, offsets = row
+                    ltext = list(text)
+                    for offset in offsets:
+                        for i in range(*offset):
+                            ltext[i] = "_"
+                    writer.writerow(["".join(ltext), ""])
