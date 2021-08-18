@@ -85,7 +85,7 @@ class ClaimExtractionDatasets:
     ) -> List[Tuple[str, List[Offset]]]:
         """Split article fulltext into smaller chunks (max. 512 tokens), with the condition that
         every claim is fully contained in one chunk."""
-        max_length = 2300  # this is a heuristic
+        max_length = 2200  # this is a heuristic
         sents = nlp(fulltext).sents
         chunks = []
         return_list = []
