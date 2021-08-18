@@ -39,7 +39,8 @@ class ClaimExtractionDatasets:
             for sample in chunks:
                 self.X.append(sample)
 
-        self.X = np.array(self.X)
+        self.X = self.limit_samples_without_claims(self.X)
+        self.X = np.array(self.X, dtype=object)
         self.train_split, self.test_split = next(
             ShuffleSplit(n_splits=1, test_size=0.15).split(self.X)
         )
@@ -117,6 +118,16 @@ class ClaimExtractionDatasets:
             return_list.append((chunk, chunk_claim_offsets))
 
         return return_list
+
+    @classmethod
+    def limit_samples_without_claims(cls, X):
+        X_with_claims = filter(lambda sample: len(sample[1]) > 0, X)
+        return_claim = list(X_with_claims)
+        X_without_claims = filter(lambda sample: len(sample[1]) == 0, X)
+        num_samples_without_claims = int(len(return_claim) * 0.05)  # max 5%
+        for _ in range(num_samples_without_claims):
+            return_claim.append(next(X_without_claims))
+        return return_claim
 
     @classmethod
     def load_from_database(cls, database="database.db", folds=5):
