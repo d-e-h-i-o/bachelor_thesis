@@ -124,7 +124,7 @@ class ClaimExtractionDatasets:
         X_with_claims = filter(lambda sample: len(sample[1]) > 0, X)
         return_claim = list(X_with_claims)
         X_without_claims = filter(lambda sample: len(sample[1]) == 0, X)
-        num_samples_without_claims = int(len(return_claim) * 0.05)  # max 5%
+        num_samples_without_claims = int(len(return_claim) * 0.00)
         for _ in range(num_samples_without_claims):
             return_claim.append(next(X_without_claims))
         return return_claim
