@@ -7,4 +7,4 @@ def fetch_plaintext(url: str) -> str:
 
     article = NewsPlease.from_url(url)
 
-    return article.maintext
+    return article.maintext or ""

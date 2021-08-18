@@ -18,7 +18,7 @@ def not_yet_processed(raw_annotation) -> bool:
 
 def fulltext_exists(url: str) -> bool:
     """Returns true if fulltext is already in database"""
-    cursor.execute('SELECT * FROM fulltext WHERE url = ? and plaintext != ""', (url,))
+    cursor.execute("SELECT * FROM fulltext WHERE url = ?", (url,))
     return bool(cursor.fetchone())
 
 

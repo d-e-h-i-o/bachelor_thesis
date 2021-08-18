@@ -33,7 +33,7 @@ def clean_string(string: str) -> str:
     string = re.sub(r"\?(?=\S)", "? ", string)
     string = re.sub(r":(?=\S)(?!innen)", ": ", string)
     string = re.sub(r"\s+", " ", string)
-    string = re.sub(r":\s(?=innen|r)", ":", string)
+    string = re.sub(r":\s(?=innen|r|innenkontakt|e|in)", ":", string)
     string = re.sub(r"(?<=\S),(?=\S)", ", ", string)
     string = re.sub(r"(?<=\S) -(?=\S)", "-", string)
     return string
@@ -41,7 +41,8 @@ def clean_string(string: str) -> str:
 
 def clean_data(annotation, plaintext):
     annotation.claim = clean_string(annotation.claim)
-    plaintext = clean_string(plaintext)
+    if plaintext:
+        plaintext = clean_string(plaintext)
     return annotation, plaintext
 
 
