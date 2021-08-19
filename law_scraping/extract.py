@@ -20,6 +20,7 @@ law_abbr_mapping = {
     "Zweite Krankenhaus-Covid-19-Verordnung": "Zweite Verordnung zu Regelungen in zugelassenen Krankenhäusern während der Covid-19-Pandemie",
     "Zweite Pflegemaßnahmen-Covid-19-Verordnung": "Zweite Pflegemaßnahmen-Covid-19-Verordnung)",
     "Krankenhaus-Covid-19-Verordnung": "Verordnung zu Regelungen in zugelassenen Krankenhäusern während der Covid-19-Pandemie",
+    "3. PflegeM-Cov-19-V": "Dritte Pflegemaßnahmen-Covid-19-Verordnung",
 }
 
 
