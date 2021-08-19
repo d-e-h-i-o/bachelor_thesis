@@ -4,6 +4,7 @@ import os
 from typing import Tuple, Dict, List
 from unicodedata import normalize
 
+import typer
 from bs4 import BeautifulSoup
 
 ABSATZ = re.compile("\(\d\d?\)")
@@ -16,8 +17,9 @@ law_abbr_mapping = {
     "InfSchMV": "SARS-CoV-2-Infektionsschutzmaßnahmenverordnung",
     "2. InfSchMV": "Zweite SARS-CoV-2-Infektionsschutzmaßnahmenverordnung",
     "3. InfSchMV": "Dritte SARS-CoV-2-Infektionsschutzmaßnahmenverordnung",
-    "Zweite Krankenhaus-Covid-19-Verordnung": "Zweite Krankenhaus-Covid-19-Verordnung",
+    "Zweite Krankenhaus-Covid-19-Verordnung": "Zweite Verordnung zu Regelungen in zugelassenen Krankenhäusern während der Covid-19-Pandemie",
     "Zweite Pflegemaßnahmen-Covid-19-Verordnung": "Zweite Pflegemaßnahmen-Covid-19-Verordnung)",
+    "Krankenhaus-Covid-19-Verordnung": "Verordnung zu Regelungen in zugelassenen Krankenhäusern während der Covid-19-Pandemie",
 }
 
 
@@ -108,11 +110,17 @@ class LawSoup:
         return [section for section in sections if section]
 
 
-if __name__ == "__main__":
-
+def main(
+    prefix: str = typer.Option(None, help="Only extract those with prefix in name")
+):
     html_file_names = [
         filename for filename in os.listdir("data/html_pages") if "#" in filename
     ]  # only the new filename format contains '#'
+
+    if prefix:
+        html_file_names = [
+            filename for filename in html_file_names if filename.startswith(prefix)
+        ]
 
     extracted_laws = {}
 
@@ -126,3 +134,7 @@ if __name__ == "__main__":
             store = LawStore(law_name)
             store.data["sections"] += soup.extract_sections()
             store.save()
+
+
+if __name__ == "__main__":
+    typer.run(main)

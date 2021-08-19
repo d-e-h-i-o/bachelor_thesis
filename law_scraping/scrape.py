@@ -31,12 +31,17 @@ def save_page(html: str, url: str, law: str) -> None:
 def main(
     url: str = typer.Option(None, help="Specify if a singe url should be scraped"),
     law: str = typer.Option(None, help="Name of the law"),
+    file_with_urls: str = typer.Option(
+        None, help="File in data/urls/{file} with urls to scrape"
+    ),
 ):
     driver = webdriver.Chrome(ChromeDriverManager().install())
     failed = []
 
+    file_name = file_with_urls or "all_urls.json"
+
     if not url:
-        with open("data/urls/all_urls.json", "r") as file:
+        with open(f"data/urls/{file_name}", "r") as file:
             to_scrape = json.load(file)
 
         for law in to_scrape:
