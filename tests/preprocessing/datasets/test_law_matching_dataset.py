@@ -15,7 +15,7 @@ def test_law_matching_dataset_should_load_from_database(law_matching_datasets):
 
 def test_law_matching_dataset_should_parse_rows(law_matching_datasets):
 
-    assert len(law_matching_datasets.X) == 890  # both positive and negative samples
+    assert len(law_matching_datasets.X) == 804  # both positive and negative samples
     assert isinstance(law_matching_datasets.X[0][0], str)  # claim
     assert isinstance(law_matching_datasets.X[0][1], str)  # list of references
     assert isinstance(law_matching_datasets.X[0][2], bool)  # label

@@ -30,7 +30,6 @@ def resolve_reference_to_subsection_text(
                 return normalize("NFKC", subsection.text)
             if subsection := subsections.get(reference.subsection_number):
                 return normalize("NFKC", subsection.text)
-
     return None
 
 
