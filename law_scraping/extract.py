@@ -23,6 +23,12 @@ law_abbr_mapping = {
 }
 
 
+def sort_function(section):
+    section_number = section["sectionNumber"]
+    section_number = re.sub("[^0-9]", "", section_number)
+    return int(section_number)
+
+
 class LawStore:
     def __init__(self, law_name):
         self.filename = law_name + ".json"
@@ -38,6 +44,11 @@ class LawStore:
             }
 
     def save(self):
+        # remove duplicates
+        self.data["sections"] = [
+            dict(t) for t in {tuple(sorted(d.items())) for d in self.data["sections"]}
+        ]
+        self.data["sections"] = sorted(self.data["sections"], key=sort_function)
         with open("data/parsed_laws/" + self.filename, "w+") as file:
             json.dump(self.data, file)
 
@@ -103,7 +114,11 @@ class LawSoup:
         return name, date
 
     def extract_sections(self) -> List[Dict[str, str]]:
-        potential_sections = self.soup.find_all("h4") + self.soup.find_all("h5")
+        potential_sections = (
+            self.soup.find_all("h4")
+            + self.soup.find_all("h5")
+            + self.soup.find_all("h6")
+        )
         sections = [
             self.construct_section(potential_section)
             for potential_section in potential_sections
