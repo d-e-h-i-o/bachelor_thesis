@@ -5,8 +5,8 @@ from typing import List
 from .section import Subsection
 
 ACT = re.compile(
-    r"(InfSchMV|2\. InfSchMV|3\. InfSchMV"
-    r"|Krankenhaus-Covid-19-Verordnung|Zweite Krankenhaus-Covid-19-Verordnung"
+    r"(2\. InfSchMV|3\. InfSchMV|InfSchMV"
+    r"|Zweite Krankenhaus-Covid-19-Verordnung|Krankenhaus-Covid-19-Verordnung"
     r"|Zweite Pflegemaßnahmen-Covid-19-Verordnung|3\. PflegeM-Cov-19-V"
     r"|SARS-CoV-2-Infektionsschutzverordnung|IfSG|SARS-CoV-2-EindmaßnV|Corona-ArbSchV)"
 )
