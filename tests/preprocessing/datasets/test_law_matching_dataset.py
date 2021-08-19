@@ -1,7 +1,11 @@
 import datetime
+import tempfile
 
 from training.preprocessing.datasets_.models import Reference
-from training.preprocessing.datasets_ import resolve_reference_to_subsection_text
+from training.preprocessing.datasets_ import (
+    resolve_reference_to_subsection_text,
+    LawMatchingDatasets,
+)
 
 
 def test_law_matching_dataset_should_load_from_database(law_matching_datasets):
@@ -45,6 +49,17 @@ def test_resolve_reference(law_matching_datasets):
     )
     assert (
         text
-        == "\n\nWissenschaftliche Bibliotheken und Archive dürfen unter Beachtung der Hygieneregeln nach §\xa02 "
-        "Absatz\xa01 ab dem 27. April 2020 für den Leihbetrieb geöffnet werden."
+        == "\n\nWissenschaftliche Bibliotheken und Archive dürfen unter Beachtung der Hygieneregeln nach § 2 "
+        "Absatz 1 ab dem 27. April 2020 für den Leihbetrieb geöffnet werden."
     )
+
+
+def test_saving_and_loading_csv_works(law_matching_datasets):
+
+    with tempfile.NamedTemporaryFile() as file:
+
+        law_matching_datasets.save_to_csv(file.name)
+
+        new_datasets = LawMatchingDatasets.load_from_csv(file.name)
+
+        assert (law_matching_datasets.X == new_datasets.X).all()

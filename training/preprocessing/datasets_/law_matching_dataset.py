@@ -4,6 +4,7 @@ import csv
 from datetime import datetime
 from random import choice
 from typing import Generator, Tuple, List, Union, Optional, Dict
+from unicodedata import normalize
 
 import numpy as np
 from numpy.typing import NDArray
@@ -22,13 +23,13 @@ def resolve_reference_to_subsection_text(
     if act := acts.get(reference.act):
         if section := act.all_sections_for(date).get(reference.section_number):
             if reference.subsection_number == "":
-                return section.text
+                return normalize("NFKC", section.text)
             subsections = section.subsections
             if subsection := subsections.get("full_section"):
                 # section has no split into subsections
-                return subsection.text
+                return normalize("NFKC", subsection.text)
             if subsection := subsections.get(reference.subsection_number):
-                return subsection.text
+                return normalize("NFKC", subsection.text)
 
     return None
 
@@ -100,6 +101,7 @@ class LawMatchingDatasets:
         cursor.execute(
             "SELECT c.claim, r.reference, r.date FROM claims c "
             "INNER JOIN 'references' r on c.annotation_id=r.annotation_id "
+            "WHERE reference not like '%IfSG%'"
         )
         rows = cursor.fetchall()
         cursor.close()
@@ -107,12 +109,17 @@ class LawMatchingDatasets:
 
     @classmethod
     def load_from_csv(cls, file_name, folds=5):
-        pass  # TODO
+        to_bool = lambda string: bool(string == "True")
+        rows = []
+        with open(file_name, "r") as csvfile:
+            reader = csv.reader(csvfile, delimiter=";")
+            for row in reader:
+                rows.append([row[0], row[1], to_bool(row[2])])
+        return cls(np.array(rows, dtype=object), needs_preprocessing=False, folds=folds)
 
     def save_to_csv(self, file_name):
-        with open(file_name, "w", newline="") as csvfile:
+        with open(file_name, "w+", newline="") as csvfile:
             writer = csv.writer(csvfile, delimiter=";")
-
             for sample in self.X:
                 writer.writerow(sample)
 
