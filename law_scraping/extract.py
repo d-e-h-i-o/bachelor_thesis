@@ -68,14 +68,14 @@ class LawSoup:
 
     def construct_section(self, title_tag):
         title = normalize(
-            "NFKD", title_tag.contents[0]
+            "NFKC", title_tag.contents[0]
         )  # to remove unicode sign like protected spaces
 
         if not title.startswith("§"):
             return
 
         for name, dates in self.table_of_contents.items():
-            if name.startswith(name):
+            if normalize("NFKC", name).startswith(title):
                 valid_from, valid_to = dates.split(" bis ")
 
         section = {
@@ -93,6 +93,7 @@ class LawSoup:
                     section["text"] += (
                         "\n" + " ".join(num.contents) + " ".join(text.contents)
                     )
+        section["text"] = normalize("NFKC", section["text"])
         return section
 
     def extract_name_and_date(self) -> Tuple[str, str]:

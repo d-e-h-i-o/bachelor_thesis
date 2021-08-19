@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Dict
 
-SECTION_DELIMITER = re.compile(r"\n\n\(\d\)")
-SECTION = re.compile(r"\n\n\((\d)\) (.+?)(?=(\n\n\(\d\)|$))", re.DOTALL)
+SECTION_DELIMITER = re.compile(r"\n\n\(\d\d?\)")
+SECTION = re.compile(r"\n\n\((\d\w?)\) (.+?)(?=(\n\n\(\d\w?\)|$))", re.DOTALL)
 
 
 def to_date(date_string: str) -> date:
