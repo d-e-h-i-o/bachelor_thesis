@@ -12,7 +12,7 @@ from preprocessing.datasets_ import ClaimExtractionDatasets
 
 from utils import (
     eval_k_fold,
-    compute_metrics,
+    compute_metrics_claim_extraction,
     report_one_pass_results,
     num_of_examples_without_claims,
 )
@@ -57,7 +57,7 @@ def train_claim_extraction(
                 train_dataset=train_dataset,
                 eval_dataset=test_dataset,
                 tokenizer=tokenizer,
-                compute_metrics=compute_metrics,
+                compute_metrics=compute_metrics_claim_extraction,
             )
             trainer.train()
             result = trainer.evaluate()
@@ -96,7 +96,7 @@ def train_claim_extraction(
             train_dataset=train_dataset,
             eval_dataset=test_dataset,
             tokenizer=tokenizer,
-            compute_metrics=compute_metrics,
+            compute_metrics=compute_metrics_claim_extraction,
         )
         trainer.train()
         if inspect:

@@ -33,7 +33,7 @@ def eval_k_fold(results):
     return overall
 
 
-def compute_metrics(p):
+def compute_metrics_claim_extraction(p):
     predictions, labels = p
     predictions = np.argmax(predictions, axis=2)
 
@@ -55,6 +55,12 @@ def compute_metrics(p):
         "f1": results["overall_f1"],
         "accuracy": results["overall_accuracy"],
     }
+
+
+def compute_metrics_law_matching(eval_pred):
+    predictions, labels = eval_pred
+    predictions = np.argmax(predictions, axis=1)
+    return metric.compute(predictions=predictions, references=labels)
 
 
 def report_cross_validation_results():

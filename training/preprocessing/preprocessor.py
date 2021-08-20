@@ -123,12 +123,10 @@ class Preprocessor:
 
         samples = {"input_ids": [], "attention_mask": [], "labels": []}
         for claim, text, is_match in X:
-            sample = dict(
-                **self.tokenizer(claim, text, truncation=True), labels=int(is_match)
-            )
+            sample = dict(**self.tokenizer(claim, text, truncation=True))
             samples["input_ids"].append(sample["input_ids"])
             samples["attention_mask"].append(sample["attention_mask"])
-            samples["labels"].append(sample["labels"])
+            samples["labels"].append(int(is_match))
         return CustomDataset(samples)
 
     def __call__(self, data: NDArray) -> Dataset:

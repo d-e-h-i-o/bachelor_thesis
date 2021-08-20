@@ -1,5 +1,4 @@
 import sqlite3
-import pickle
 import csv
 from operator import itemgetter
 from itertools import groupby

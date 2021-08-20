@@ -17,6 +17,7 @@ def claim_extraction_sample():
     return datasets.X[0]
 
 
+@pytest.mark.skip
 def test_preprocessor_align_claim_label_works():
     tokenizer = MagicMock()
     preprocessor = Preprocessor(tokenizer, "claim_extraction")
@@ -43,6 +44,7 @@ def test_preprocessor_align_claim_label_works():
     assert (labels == expected_labels).all()
 
 
+@pytest.mark.skip
 @vcr.use_cassette("tests/vcr/tokenizer")
 def test_preprocessor_end_to_end_claim_extraction(claim_extraction_datasets):
     tokenizer = AutoTokenizer.from_pretrained("deepset/gbert-large")
@@ -59,3 +61,6 @@ def test_preprocessor_end_to_end_law_matching(law_matching_datasets):
 
     dataset = law_matching_datasets.X[slice(0, 10)]
     input = preprocessor(dataset)
+
+    assert len(law_matching_datasets.train) == 643
+    assert len(law_matching_datasets.test) == 161

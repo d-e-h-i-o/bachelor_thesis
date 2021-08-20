@@ -8,7 +8,7 @@ from unicodedata import normalize
 
 import numpy as np
 from numpy.typing import NDArray
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, ShuffleSplit
 
 from .models import Reference, parse_references, Act
 
@@ -63,9 +63,22 @@ class LawMatchingDatasets:
         else:
             self.X = input
 
+        self.train_split, self.test_split = next(
+            ShuffleSplit(n_splits=1, test_size=0.20).split(self.X)
+        )
+
     @property
-    def folds(self) -> Generator:
-        return self.kf.split(self.X)
+    def folds(self):
+        for train_split, test_split in self.kf.split(self.X):
+            yield self.X[train_split], self.X[test_split]
+
+    @property
+    def train(self) -> NDArray[LawMatchingSample]:
+        return self.X[self.train_split]
+
+    @property
+    def test(self) -> NDArray[LawMatchingSample]:
+        return self.X[self.test_split]
 
     def parse_rows(self, rows: List[DBRow]) -> NDArray[LawMatchingSample]:
         """Parse the raw rows from the database, and adds a negative sample for every positive."""

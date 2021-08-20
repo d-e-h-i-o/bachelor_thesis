@@ -1,6 +1,7 @@
 import typer
 
 from train_claim_extraction_model import train_claim_extraction
+from train_law_matching_model import train_law_matching
 
 app = typer.Typer()
 
@@ -19,8 +20,13 @@ def claim_extraction(
 
 
 @app.command()
-def law_matching():
-    pass
+def law_matching(
+    epochs: int = 3,
+    cross_validation: bool = True,
+    inspect: bool = False,
+    learning_rate: float = 2e-5,
+):
+    train_law_matching(epochs, cross_validation, inspect, learning_rate)
 
 
 if __name__ == "__main__":
