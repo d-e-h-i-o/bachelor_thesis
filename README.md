@@ -1,5 +1,19 @@
 # Bachelor Thesis
 
+This is the repository for my bachelor thesis `Claim retrieval and matching with laws for COVID-19 related legislation`.
+
+It is concerned with the following goals:
+- Define the claim extraction task (extract claims about Covid-19 related laws from newspaper articles)
+- Define the law matching task (match those claims with the laws that are referenced in the claim)
+- Collect datasets for both tasks
+- Train models for both tasks
+
+## Table of Contents
+[1. Setup](#setup)  
+[2. Training](#training)  
+[3. Database](#database)  
+[4. Legislation](#legislation)  
+
 ## Setup
 
 ```console
@@ -8,64 +22,95 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Workflow
+## Training
 
-![full pipeline](assets/pipeline.png)
+#### Claim extraction
+````
+Usage: training claim-extraction [OPTIONS]
 
-1. Annotate on [Hypothesis](https://hypothes.is/users/niklas_thesis)
-2. Run annotation pipepline `python annotation_pipline/run_pipeline.py`
-    1. -> Annotations are downloaded from Hypothesis
-    2. -> Annotated webpages are saved to [Wayback Machine](https://web.archive.org/)
-    3. -> Plaintext article is extraced with [NewsPlease](https://github.com/fhamborg/news-please)
-    4. -> Data is save to database
-  3. Export data:  
-     `sqlite3 -header -csv database.db "select claim, url, plaintext from claims c join fulltext f on c.url = f.url;" > claim_extraction.csv`  
-     `sqlite3 -header -csv database.db 'select claim, reference, date from "references" r join claims c on r.annotation_id = c.annotation_id;' > claim_matching.csv`
-4. Import csv to colab notebooks and run preprocessing function (TODO)
-5. Train (TODO)
+Options:
+  --epochs INTEGER                [default: 3]
+  --cross-validation / --no-cross-validation
+                                  [default: True]
+  --inspect / --no-inspect        [default: False]
+  --learning-rate FLOAT           [default: 2e-05]
+  --filter-examples-without-claims / --no-filter-examples-without-claims
+                                  [default: False]
+  --help                          Show this message and exit.
+````
+e.g. ``python training claim-extraction --epochs 10``
+#### Law matching
+````
+Usage: training law-matching [OPTIONS]
 
-## Project Structure
-- `annotation_pipeline` Fetches annotations from Hypothesis, processes them and save them to `database.db`
-- `law_scraping`
-  - `scrape.py` Scrapes all data from the urls specified in `data/urls/`  to `data/html_pages/`
-  - `extract.py` Extracts the laws from `data/html_pages/` to `data/parsed_laws/laws.json` in the [data format](#Format)
-  - `data/`
-      - `html_pages/` The raw html_pages that were scraped by `scrape.py`
-      - `parsed_laws/` The output from `extract.py`
-      - `urls/` Contains urls from [gesetze.berlin.de](gesetze.berlin.de) for all [coronavirus laws in Berlin](https://de.wikipedia.org/wiki/SARS-CoV-2-Verordnungen_in_Berlin)
-- `database.db` Contains `extraction_data` table and `matching_data` table
-    
-    
-## Data format
+Options:
+  --epochs INTEGER                [default: 3]
+  --cross-validation / --no-cross-validation
+                                  [default: True]
+  --inspect / --no-inspect        [default: False]
+  --learning-rate FLOAT           [default: 2e-05]
+  --help                          Show this message and exit.
+````
+e.g. ``python training law-matching --epochs 10 --no-cross-validation --inspect``
 
-### Database
+## Database
 
-The SQLite database is called `database.db`. See `annotation_pipleline/initial_migration.sql` for the data format.
+The SQLite database is called `database.db`. It contains the claim extraction and law matching data.
+See [initial_migration.sql](initial_migration.sql) for the data format or `sqlite3 database.db -cmd .schema`
 
-### Laws
+## Legislation
 
-The parsed laws can currently be found under `data/parsed_laws` in a single `laws.json` file.
+The legislation text can be found in the [legislation folder](legislation). The json files contain the section with their
+respective validity dates. Currently, the following legislation is there:
+- 1\. InfSchMV
+- 2\. InfSchMV
+- 3\. InfSChMV
+- Corona-ArbSchV
+- GroßveranstVerbV
+- SARS-CoV-2-EindV.json
+- Zweite Pflegemaßnahmen-Covid-19-Verordnung.json
+- 3\. PflegeM-Cov-19-V.json
+- Krankenhaus-Covid-19-Verordnung.json
+- SARS-CoV-2-Infektionsschutzverordnung.json
 
 The are formatted like this:
 ```json
 {
-  "CoronaVVBE4rahmen_4020201107": {
-    "§ 1": {
-      "titleText": "Grundsätzliche Pflichten",
-      "(1)": "{ Text of the first sentence}",
-      "(2)": "..."
-    },
-    "§ 2": {
-      "titleText": "..."
+  "name": "SARS-CoV-2-Arbeitsschutzverordnung",
+  "abbreviation": "Corona-ArbSchV",
+  "sections": [
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Ziel und Anwendungsbereich",
+      "valid_from": "27.01.2021",
+      "valid_to": "12.03.2021",
+      "text": "..."
     }
-  }
+  ]
 }
 ```
-and can be accessed like this: `laws["CoronaVVBE4rahmen_4020201107"]["§ 1"]["(1)"]`
 
-I still have to include dates.
-## Next steps
-- [ ] Improve `extract.py` (e.g. include dates) The parsing is still awkward
-- [ ] Annotate (ongoing on [Hypothesis](https://hypothes.is/users/niklas_thesis))
-- [ ] Extract plaintext for the articles that NewsPlease didn't handle correctly
-- [ ] Setup preprocessing function for claim extraction task
+#### Scraping and parsing new legislation
+For scraping and parsing new legislation from [gesetze.berlin.de](gesetze.berlin.de), their url should be placed in the `law_scraping/data/urls` folder.
+
+#### Scrape
+``` 
+Usage: law_scraping scrape [OPTIONS]
+
+Options:
+  --url TEXT             Specify if a singe url should be scraped
+  --law TEXT             Name of the law
+  --file-with-urls TEXT  File in data/urls/{file} with urls to scrape
+  --help                 Show this message and exit.
+```
+e.g. `python law_scraping scrape --file_with_urls SchulHygCoV-19-VO.json`
+
+#### Parse
+```
+Usage: law_scraping extract [OPTIONS]
+
+Options:
+  --prefix TEXT  Only extract those with prefix in name
+  --help         Show this message and exit.
+```
+e.g. `python law_scraping extract --prefix Schul`
