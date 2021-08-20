@@ -4,7 +4,6 @@ import os
 from typing import Tuple, Dict, List
 from unicodedata import normalize
 
-import typer
 from bs4 import BeautifulSoup
 
 ABSATZ = re.compile("\(\d\d?\)")
@@ -21,6 +20,7 @@ law_abbr_mapping = {
     "Zweite Pflegemaßnahmen-Covid-19-Verordnung": "Zweite Pflegemaßnahmen-Covid-19-Verordnung)",
     "Krankenhaus-Covid-19-Verordnung": "Verordnung zu Regelungen in zugelassenen Krankenhäusern während der Covid-19-Pandemie",
     "3. PflegeM-Cov-19-V": "Dritte Pflegemaßnahmen-Covid-19-Verordnung",
+    "SchulHygCoV-19-VO": "Schul-Hygiene-Covid-19-Verordnung",
 }
 
 
@@ -33,9 +33,9 @@ def sort_function(section):
 class LawStore:
     def __init__(self, law_name):
         self.filename = law_name + ".json"
-        law_files = os.listdir("data/parsed_laws")
+        law_files = os.listdir("law_scraping/data/parsed_laws")
         if self.filename in law_files:
-            with open("data/parsed_laws/" + self.filename, "r") as file:
+            with open("law_scraping/data/parsed_laws/" + self.filename, "r") as file:
                 self.data = json.load(file)
         else:
             self.data = {
@@ -50,7 +50,7 @@ class LawStore:
             dict(t) for t in {tuple(sorted(d.items())) for d in self.data["sections"]}
         ]
         self.data["sections"] = sorted(self.data["sections"], key=sort_function)
-        with open("data/parsed_laws/" + self.filename, "w+") as file:
+        with open("law_scraping/data/parsed_laws/" + self.filename, "w+") as file:
             json.dump(self.data, file)
 
 
@@ -127,11 +127,11 @@ class LawSoup:
         return [section for section in sections if section]
 
 
-def main(
-    prefix: str = typer.Option(None, help="Only extract those with prefix in name")
-):
+def extraction(prefix):
     html_file_names = [
-        filename for filename in os.listdir("data/html_pages") if "#" in filename
+        filename
+        for filename in os.listdir("law_scraping/data/html_pages")
+        if "#" in filename
     ]  # only the new filename format contains '#'
 
     if prefix:
@@ -146,12 +146,8 @@ def main(
             continue
         print(file_name)
         law_name = file_name.split("#")[0]
-        with open("data/html_pages/" + file_name, "r") as file:
+        with open("law_scraping/data/html_pages/" + file_name, "r") as file:
             soup = LawSoup(BeautifulSoup(file.read(), "html.parser"))
             store = LawStore(law_name)
             store.data["sections"] += soup.extract_sections()
             store.save()
-
-
-if __name__ == "__main__":
-    typer.run(main)
