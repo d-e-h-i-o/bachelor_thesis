@@ -59,8 +59,7 @@ def test_preprocessor_end_to_end_law_matching(law_matching_datasets):
     tokenizer = AutoTokenizer.from_pretrained("deepset/gbert-large")
     preprocessor = Preprocessor(tokenizer, "law_matching")
 
-    dataset = law_matching_datasets.X[slice(0, 10)]
-    input = preprocessor(dataset)
+    input = preprocessor(law_matching_datasets.X)
 
     assert len(law_matching_datasets.train) == 643
     assert len(law_matching_datasets.test) == 161

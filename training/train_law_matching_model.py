@@ -1,3 +1,4 @@
+import numpy as np
 from transformers import (
     TrainingArguments,
     Trainer,
@@ -78,6 +79,21 @@ def train_law_matching(
         )
         trainer.train()
         if inspect:
+
+            def inspect_sample(nr: int):
+                texts = tokenizer.decode(test_dataset[nr]["input_ids"]).split(" [SEP] ")
+                output = model(
+                    input_ids=test_dataset[nr]["input_ids"].unsqueeze(0).cuda(),
+                    attention_mask=test_dataset[nr]["attention_mask"]
+                    .unsqueeze(0)
+                    .cuda(),
+                )
+                print(f"Claim: {texts[0][6:]}\n")
+                print(f"Law: {texts[1][:][:-6]}\n")
+                print(f"Label: {bool(test_dataset[nr]['input_ids']['label'])}\n")
+                logits = output.logits.cpu().detach().numpy()
+                predictions = np.argmax(logits, axis=1)
+                print(f"Prediction: {predictions}")
 
             breakpoint()
         result = trainer.evaluate()
