@@ -8,22 +8,25 @@ app = typer.Typer()
 
 @app.command()
 def claim_extraction(
-    epochs: int = 3,
-    cross_validation: bool = True,
-    inspect: bool = False,
+    epochs: int = typer.Option(3, help="Number of epochs"),
+    cross_validation: bool = typer.Option(True, help="5-fold cross validation"),
+    inspect: bool = typer.Option(
+        False,
+        help="Sets breakpoint after model was trained, to interactively inspect results.",
+    ),
     learning_rate: float = 2e-5,
-    filter_examples_without_claims: bool = False,
 ):
-    train_claim_extraction(
-        epochs, cross_validation, inspect, learning_rate, filter_examples_without_claims
-    )
+    train_claim_extraction(epochs, cross_validation, inspect, learning_rate)
 
 
 @app.command()
 def law_matching(
-    epochs: int = 3,
-    cross_validation: bool = True,
-    inspect: bool = False,
+    epochs: int = typer.Option(3, help="Number of epochs"),
+    cross_validation: bool = typer.Option(True, help="5-fold cross validation"),
+    inspect: bool = typer.Option(
+        False,
+        help="Sets breakpoint after model was trained, to interactively inspect results.",
+    ),
     learning_rate: float = 2e-5,
     from_file: str = typer.Option(
         None, help="Load dataset from csv file with this path."

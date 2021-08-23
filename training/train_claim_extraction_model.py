@@ -1,3 +1,5 @@
+from random import randint
+
 import numpy as np
 from datasets import load_metric
 from transformers import (
@@ -26,10 +28,9 @@ def train_claim_extraction(
     cross_validation: bool = True,
     inspect: bool = False,
     learning_rate: float = 2e-5,
-    filter_examples_without_claims: bool = False,
 ):
     args = TrainingArguments(
-        f"/data/experiments/dehio/models/test-claim-extraction",
+        f"/data/experiments/dehio/models/test-claim-extraction-{randint(0, 100000)}",
         evaluation_strategy=IntervalStrategy.EPOCH,
         learning_rate=learning_rate,
         per_device_train_batch_size=4,
@@ -82,14 +83,6 @@ def train_claim_extraction(
             "Examples with no claims in test dataset:",
             num_of_examples_without_claims(test_dataset),
         )
-        if filter_examples_without_claims:
-            train_dataset = np.array(
-                [
-                    e
-                    for e in train_dataset
-                    if sum(filter(lambda x: x >= 0, e["labels"])) > 0
-                ]
-            )
         trainer = Trainer(
             model,
             args,

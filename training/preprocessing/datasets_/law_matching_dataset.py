@@ -100,9 +100,8 @@ class LawMatchingDatasets:
                     wrong_reference_text = resolve_reference_to_subsection_text(
                         wrong_reference, self.acts, date
                     )
+                    used_references.append(wrong_reference)
                 negative_sample = (claim, wrong_reference_text, False)
-                used_references.append(wrong_reference)
-
                 samples.append(positive_sample)
                 samples.append(negative_sample)
 

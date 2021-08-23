@@ -1,4 +1,5 @@
 from typing import Optional
+from random import randint
 
 import numpy as np
 import torch
@@ -30,7 +31,7 @@ def train_law_matching(
     from_file: Optional[str] = None,
 ):
     args = TrainingArguments(
-        f"/data/experiments/dehio/models/test-law-matching",
+        f"/data/experiments/dehio/models/test-law-matching-{randint(0, 100000)}",
         evaluation_strategy=IntervalStrategy.EPOCH,
         learning_rate=learning_rate,
         per_device_train_batch_size=4,
