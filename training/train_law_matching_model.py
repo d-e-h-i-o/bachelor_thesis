@@ -101,10 +101,10 @@ def train_law_matching(
                 )
                 print(f"Claim: {texts[0][6:]}\n")
                 print(f"Law: {texts[1][:][:-6]}\n")
-                print(f"Label: {bool(test_dataset[nr]['input_ids']['label'])}\n")
+                print(f"Label: {bool(test_dataset[nr]['labels'])}\n")
                 logits = output.logits.cpu().detach().numpy()
                 predictions = np.argmax(logits, axis=1)
-                print(f"Prediction: {predictions}")
+                print(f"Prediction: {bool(predictions)}")
 
             breakpoint()
         result = trainer.evaluate()
