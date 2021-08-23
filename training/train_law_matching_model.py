@@ -9,7 +9,7 @@ from transformers import (
 from preprocessing import Preprocessor
 from preprocessing.datasets_ import LawMatchingDatasets
 
-from .utils import (
+from utils import (
     eval_k_fold,
     compute_metrics_law_matching,
 )
