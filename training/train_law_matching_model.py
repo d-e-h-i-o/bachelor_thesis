@@ -37,7 +37,7 @@ def train_law_matching(
 
     datasets = LawMatchingDatasets.load_from_database()
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-    preprocessor = Preprocessor(tokenizer, "law-matching")
+    preprocessor = Preprocessor(tokenizer, "law_matching")
     results = []
 
     if cross_validation:
