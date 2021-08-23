@@ -4,8 +4,6 @@ from datetime import datetime
 import numpy as np
 from datasets import load_metric
 
-metric = load_metric("seqeval", "IOB2")
-
 
 def eval_k_fold(results):
     # TODO: Is this correct? Is there a better way to do this?
@@ -34,6 +32,7 @@ def eval_k_fold(results):
 
 
 def compute_metrics_claim_extraction(p):
+    metric = load_metric("seqeval", "IOB2")
     predictions, labels = p
     predictions = np.argmax(predictions, axis=2)
 
@@ -58,6 +57,7 @@ def compute_metrics_claim_extraction(p):
 
 
 def compute_metrics_law_matching(eval_pred):
+    metric = load_metric("glue", "mrpc")
     predictions, labels = eval_pred
     predictions = np.argmax(predictions, axis=1)
     return metric.compute(predictions=predictions, references=labels)
