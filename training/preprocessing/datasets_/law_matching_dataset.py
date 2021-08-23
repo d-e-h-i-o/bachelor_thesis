@@ -23,13 +23,13 @@ def resolve_reference_to_subsection_text(
     if act := acts.get(reference.act):
         if section := act.all_sections_for(date).get(reference.section_number):
             if reference.subsection_number == "":
-                return normalize("NFKC", section.text)
+                return normalize("NFKC", section.text).strip()
             subsections = section.subsections
             if subsection := subsections.get("full_section"):
                 # section has no split into subsections
-                return normalize("NFKC", subsection.text)
+                return normalize("NFKC", subsection.text).strip()
             if subsection := subsections.get(reference.subsection_number):
-                return normalize("NFKC", subsection.text)
+                return normalize("NFKC", subsection.text).strip()
     return None
 
 
