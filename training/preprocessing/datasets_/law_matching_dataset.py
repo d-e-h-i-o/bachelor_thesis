@@ -30,7 +30,7 @@ def resolve_reference_to_subsection_text(
                 return normalize("NFKC", subsection.text).strip()
             if subsection := subsections.get(reference.subsection_number):
                 return normalize("NFKC", subsection.text).strip()
-    return None
+    raise Exception(f"Reference {reference} could not be resolved.")
 
 
 class LawMatchingDatasets:
