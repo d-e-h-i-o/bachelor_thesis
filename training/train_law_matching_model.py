@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from transformers import (
     TrainingArguments,
     Trainer,
@@ -83,8 +84,12 @@ def train_law_matching(
             def inspect_sample(nr: int):
                 texts = tokenizer.decode(test_dataset[nr]["input_ids"]).split(" [SEP] ")
                 output = model(
-                    input_ids=test_dataset[nr]["input_ids"].unsqueeze(0).cuda(),
-                    attention_mask=test_dataset[nr]["attention_mask"]
+                    input_ids=torch.from_numpy(np.array(test_dataset[nr]["input_ids"]))
+                    .unsqueeze(0)
+                    .cuda(),
+                    attention_mask=torch.from_numpy(
+                        np.array(test_dataset[nr]["attention_mask"])
+                    )
                     .unsqueeze(0)
                     .cuda(),
                 )
