@@ -1,3 +1,5 @@
+from typing import Optional
+
 import numpy as np
 import torch
 from transformers import (
@@ -25,6 +27,7 @@ def train_law_matching(
     cross_validation: bool = True,
     inspect: bool = False,
     learning_rate: float = 2e-5,
+    from_file: Optional[str] = None,
 ):
     args = TrainingArguments(
         f"/data/experiments/dehio/models/test-law-matching",
@@ -37,7 +40,10 @@ def train_law_matching(
         weight_decay=0.01,
     )
 
-    datasets = LawMatchingDatasets.load_from_database()
+    if from_file:
+        datasets = LawMatchingDatasets.load_from_csv(from_file)
+    else:
+        datasets = LawMatchingDatasets.load_from_database()
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
     preprocessor = Preprocessor(tokenizer, "law_matching")
     results = []

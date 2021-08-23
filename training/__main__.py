@@ -25,8 +25,11 @@ def law_matching(
     cross_validation: bool = True,
     inspect: bool = False,
     learning_rate: float = 2e-5,
+    from_file: str = typer.Option(
+        None, help="Load dataset from csv file with this path."
+    ),
 ):
-    train_law_matching(epochs, cross_validation, inspect, learning_rate)
+    train_law_matching(epochs, cross_validation, inspect, learning_rate, from_file)
 
 
 if __name__ == "__main__":
