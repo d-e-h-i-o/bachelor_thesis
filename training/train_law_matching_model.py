@@ -3,6 +3,7 @@ from random import randint
 
 import numpy as np
 import torch
+from datasets import load_metric
 from transformers import (
     TrainingArguments,
     Trainer,
@@ -21,6 +22,46 @@ from utils import (
 
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
+tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+preprocessor = Preprocessor(tokenizer, "law_matching")
+
+
+def train_law_matching_model(train_set, test_set, args):
+    model = AutoModelForSequenceClassification.from_pretrained(
+        model_checkpoint, num_labels=2
+    )
+    train_dataset = preprocessor(train_set)
+    test_dataset = preprocessor(test_set)
+    trainer = Trainer(
+        model,
+        args,
+        train_dataset=train_dataset,
+        eval_dataset=test_dataset,
+        tokenizer=tokenizer,
+        compute_metrics=compute_metrics_law_matching,
+    )
+    trainer.train()
+    return trainer, model
+
+
+def indices_of_wrong_classifications(test_dataset, trainer):
+    metric = load_metric("glue", "mrpc")
+    test_dataset = preprocessor(test_dataset)
+    logits, labels, _ = trainer.predict(test_dataset)
+    predictions = np.argmax(logits, axis=1)
+    wrong_predictions = []
+
+    for i in range(len(predictions)):
+        if predictions[i] != labels[i]:
+            wrong_predictions.append(i)
+
+    result = metric.compute(predictions=predictions, references=labels)
+    print(
+        "Results for BERT model:",
+        result,
+        f"{(len(labels) - len(wrong_predictions)) /len(labels)}",
+    )
+    return wrong_predictions
 
 
 def train_law_matching(
@@ -45,26 +86,12 @@ def train_law_matching(
         datasets = LawMatchingDatasets.load_from_csv(from_file)
     else:
         datasets = LawMatchingDatasets.load_from_database()
-    tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-    preprocessor = Preprocessor(tokenizer, "law_matching")
+
     results = []
 
     if cross_validation:
         for i, (train_set, test_set) in enumerate(datasets.folds):
-            model = AutoModelForSequenceClassification.from_pretrained(
-                model_checkpoint, num_labels=2
-            )
-            train_dataset = preprocessor(train_set)
-            test_dataset = preprocessor(test_set)
-            trainer = Trainer(
-                model,
-                args,
-                train_dataset=train_dataset,
-                eval_dataset=test_dataset,
-                tokenizer=tokenizer,
-                compute_metrics=compute_metrics_law_matching,
-            )
-            trainer.train()
+            trainer, _ = train_law_matching_model(train_set, test_set, args)
             result = trainer.evaluate()
             results.append(result)
 
@@ -72,21 +99,10 @@ def train_law_matching(
 
         print(f"Overall results: {eval_k_fold(results)}")
     else:
-        model = AutoModelForSequenceClassification.from_pretrained(
-            model_checkpoint, num_labels=2
-        )
-        train_dataset = preprocessor(datasets.train)
-        test_dataset = preprocessor(datasets.test)
-        trainer = Trainer(
-            model,
-            args,
-            train_dataset=train_dataset,
-            eval_dataset=test_dataset,
-            tokenizer=tokenizer,
-            compute_metrics=compute_metrics_law_matching,
-        )
-        trainer.train()
+        trainer, model = train_law_matching_model(datasets.train, datasets.test, args)
+
         if inspect:
+            test_dataset = preprocessor(datasets.test)
 
             def inspect_sample(nr: int):
                 texts = tokenizer.decode(test_dataset[nr]["input_ids"]).split(" [SEP] ")

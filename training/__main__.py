@@ -2,6 +2,8 @@ import typer
 
 from train_claim_extraction_model import train_claim_extraction
 from train_law_matching_model import train_law_matching
+from baseline_law_matching import calculate_baseline_law_matching
+from evaluate_law_matching import evaluate
 
 app = typer.Typer()
 
@@ -33,6 +35,20 @@ def law_matching(
     ),
 ):
     train_law_matching(epochs, cross_validation, inspect, learning_rate, from_file)
+
+
+@app.command()
+def baseline_law_matching(
+    from_file: str = typer.Option(
+        None, help="Load dataset from csv file with this path."
+    )
+):
+    calculate_baseline_law_matching(from_file)
+
+
+@app.command()
+def evaluate_wrong_predictions():
+    evaluate()
 
 
 if __name__ == "__main__":
