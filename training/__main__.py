@@ -3,7 +3,7 @@ import typer
 from train_claim_extraction_model import train_claim_extraction
 from train_law_matching_model import train_law_matching
 from baseline_law_matching import calculate_baseline_law_matching
-from evaluate_law_matching import evaluate
+from evaluate_law_matching import evaluate as _evaluate
 
 app = typer.Typer()
 
@@ -47,8 +47,8 @@ def baseline_law_matching(
 
 
 @app.command()
-def evaluate_wrong_predictions():
-    evaluate()
+def evaluate():
+    _evaluate()
 
 
 if __name__ == "__main__":

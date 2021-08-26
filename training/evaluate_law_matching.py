@@ -1,6 +1,7 @@
 import csv
 from random import randint
 
+import torch
 from transformers import (
     TrainingArguments,
     IntervalStrategy,
@@ -23,11 +24,13 @@ args = TrainingArguments(
     f"/data/experiments/dehio/models/test-law-matching-{randint(0, 100000)}",
     evaluation_strategy=IntervalStrategy.EPOCH,
     learning_rate=0.00001,
-    per_device_train_batch_size=4,
-    per_device_eval_batch_size=4,
+    per_device_train_batch_size=1,
+    per_device_eval_batch_size=1,
     per_gpu_train_batch_size=1,
+    per_gpu_eval_batch_size=1,
     num_train_epochs=3,
     weight_decay=0.01,
+    eval_accumulation_steps=10,
 )
 
 
@@ -40,7 +43,9 @@ def evaluate():
         classifier = train_baseline(train_set)
 
         baseline_indices = baseline_wrong_indices(test_set, classifier)
-        bert_indices = bert_wrong_indices(test_set, trainer)
+        with torch.no_grad():
+            torch.cuda.empty_cache()
+            bert_indices = bert_wrong_indices(test_set, trainer)
 
         for i in range(len(test_set)):
             if i in baseline_indices or i in bert_indices:

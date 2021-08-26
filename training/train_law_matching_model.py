@@ -30,6 +30,7 @@ def train_law_matching_model(train_set, test_set, args):
     model = AutoModelForSequenceClassification.from_pretrained(
         model_checkpoint, num_labels=2
     )
+    model.config.gradient_checkpointing = True
     train_dataset = preprocessor(train_set)
     test_dataset = preprocessor(test_set)
     trainer = Trainer(
