@@ -1,9 +1,10 @@
 import os
+import re
 import sqlite3
 import csv
 from datetime import datetime
 from random import choice
-from typing import Generator, Tuple, List, Union, Optional, Dict
+from typing import Tuple, List, Union, Optional, Dict
 from unicodedata import normalize
 
 import numpy as np
@@ -16,6 +17,12 @@ LawMatchingSample = Tuple[str, str, bool]
 DBRow = Tuple[str, str, str]
 
 
+def clean_text(text: str) -> str:
+    text = normalize("NFKC", text)
+    text = re.sub(r"\s+", " ", text, flags=re.I)
+    return text.strip()
+
+
 def resolve_reference_to_subsection_text(
     reference: Reference, acts: Dict[str, Act], date: datetime.date
 ) -> Optional[str]:
@@ -23,13 +30,13 @@ def resolve_reference_to_subsection_text(
     if act := acts.get(reference.act):
         if section := act.all_sections_for(date).get(reference.section_number):
             if reference.subsection_number == "":
-                return normalize("NFKC", section.text).strip()
+                return clean_text(section.text)
             subsections = section.subsections
             if subsection := subsections.get("full_section"):
                 # section has no split into subsections
-                return normalize("NFKC", subsection.text).strip()
+                return clean_text(subsection.text)
             if subsection := subsections.get(reference.subsection_number):
-                return normalize("NFKC", subsection.text).strip()
+                return clean_text(subsection.text)
     raise Exception(f"Reference {reference} could not be resolved.")
 
 

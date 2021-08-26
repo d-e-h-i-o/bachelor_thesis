@@ -49,7 +49,7 @@ def test_resolve_reference(law_matching_datasets):
     )
     assert (
         text
-        == "\n\nWissenschaftliche Bibliotheken und Archive dürfen unter Beachtung der Hygieneregeln nach § 2 "
+        == "Wissenschaftliche Bibliotheken und Archive dürfen unter Beachtung der Hygieneregeln nach § 2 "
         "Absatz 1 ab dem 27. April 2020 für den Leihbetrieb geöffnet werden."
     )
 
