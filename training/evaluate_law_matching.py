@@ -50,7 +50,13 @@ def evaluate():
         for i in range(len(test_set)):
             if i in baseline_indices or i in bert_indices:
                 wrong_predictions.append(
-                    (test_set[i], bool(i in baseline_indices), bool(i in bert_indices))
+                    (
+                        test_set[i][0],
+                        test_set[i][1],
+                        test_set[i][2],
+                        bool(i not in baseline_indices),
+                        bool(i not in bert_indices),
+                    )
                 )
 
     with open(
