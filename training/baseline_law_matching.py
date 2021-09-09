@@ -8,7 +8,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from preprocessing.datasets_ import LawMatchingDatasets
-from utils import report_results
+from utils import report_results, eval_k_fold
 
 nlp = spacy.load("de_core_news_sm")
 
@@ -43,15 +43,18 @@ def preprocess(X):
 
 def calculate_baseline_law_matching(from_file: Optional[str]):
     datasets = LawMatchingDatasets.load_from_csv(from_file)
+    results = []
 
-    x_train, y_train = preprocess(datasets.train)
-    x_test, y_test = preprocess(datasets.test)
+    for (x_train, y_train), (x_test, y_test) in datasets.folds:
+        classifier.fit(x_train, y_train)
+        predictions = classifier.predict(x_test)
+        result = metric.compute(predictions=predictions, references=y_test)
+        results.append(result)
 
-    classifier.fit(x_train, y_train)
-    predictions = classifier.predict(x_test)
-    result = metric.compute(predictions=predictions, references=y_test)
-    print(result)
-    report_results("baseline", result, datasets)
+        print(f"Results for fold {i}: {result}")
+
+    print(f"Overall results: {eval_k_fold(results)}")
+    report_results("baseline", eval_k_fold(results), datasets)
 
 
 def train_baseline(train_dataset):
