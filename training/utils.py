@@ -1,5 +1,6 @@
 import json
 import os
+import statistics
 from datetime import datetime
 from typing import Union
 
@@ -26,6 +27,9 @@ def eval_k_fold(results):
 
     for key in keys:
         overall[key] /= num_results
+
+    for key in keys:
+        overall[key + "_stdev"] = statistics.stdev([result[key] for result in results])
 
     return overall
 
