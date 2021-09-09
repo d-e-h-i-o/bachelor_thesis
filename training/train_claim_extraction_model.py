@@ -16,6 +16,7 @@ from utils import (
     eval_k_fold,
     compute_metrics_claim_extraction,
     num_of_examples_without_claims,
+    report_results,
 )
 
 model_checkpoint = "deepset/gbert-large"
@@ -66,6 +67,16 @@ def train_claim_extraction(
             print(f"Results for fold {i}: {result}")
 
         print(f"Overall results: {eval_k_fold(results)}")
+        report_results(
+            "claim_extraction",
+            eval_k_fold(results),
+            datasets,
+            parameters={
+                "epochs": epochs,
+                "learning_rate": learning_rate,
+                "model": model_checkpoint,
+            },
+        )
     else:
         model = AutoModelForTokenClassification.from_pretrained(
             model_checkpoint, num_labels=3

@@ -15,10 +15,7 @@ from transformers import (
 from preprocessing import Preprocessor
 from preprocessing.datasets_ import LawMatchingDatasets
 
-from utils import (
-    eval_k_fold,
-    compute_metrics_law_matching,
-)
+from utils import eval_k_fold, compute_metrics_law_matching, report_results
 
 model_checkpoint = "deepset/gbert-large"
 model_name = model_checkpoint.split("/")[-1]
@@ -99,6 +96,16 @@ def train_law_matching(
             print(f"Results for fold {i}: {result}")
 
         print(f"Overall results: {eval_k_fold(results)}")
+        report_results(
+            "law_matching",
+            eval_k_fold(results),
+            datasets,
+            parameters={
+                "epochs": epochs,
+                "learning_rate": learning_rate,
+                "model": model_checkpoint,
+            },
+        )
     else:
         trainer, model = train_law_matching_model(datasets.train, datasets.test, args)
 
