@@ -15,7 +15,6 @@ from preprocessing.datasets_ import ClaimExtractionDatasets
 from utils import (
     eval_k_fold,
     compute_metrics_claim_extraction,
-    report_one_pass_results,
     num_of_examples_without_claims,
 )
 
@@ -136,4 +135,3 @@ def train_claim_extraction(
         print(f"Results: {result}")
 
         parameter = {"epochs": epochs, "learning_rate": learning_rate}
-        report_one_pass_results(datasets, result, parameter)

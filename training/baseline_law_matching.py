@@ -3,14 +3,12 @@ from typing import Optional
 
 import spacy
 from datasets import load_metric
-from spacy.tokens import Doc
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.base import TransformerMixin
-from sklearn.pipeline import Pipeline
 from sklearn.metrics.pairwise import cosine_similarity
 
 from preprocessing.datasets_ import LawMatchingDatasets
+from utils import report_results
 
 nlp = spacy.load("de_core_news_sm")
 
@@ -44,7 +42,7 @@ def preprocess(X):
 
 
 def calculate_baseline_law_matching(from_file: Optional[str]):
-    datasets = LawMatchingDatasets.load_from_database()
+    datasets = LawMatchingDatasets.load_from_csv(from_file)
 
     x_train, y_train = preprocess(datasets.train)
     x_test, y_test = preprocess(datasets.test)
@@ -53,6 +51,7 @@ def calculate_baseline_law_matching(from_file: Optional[str]):
     predictions = classifier.predict(x_test)
     result = metric.compute(predictions=predictions, references=y_test)
     print(result)
+    report_results("baseline", result, datasets)
 
 
 def train_baseline(train_dataset):

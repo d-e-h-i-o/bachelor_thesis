@@ -1,8 +1,15 @@
+import json
 import os
 from datetime import datetime
+from typing import Union
 
 import numpy as np
 from datasets import load_metric
+
+from preprocessing.datasets_ import (
+    LawMatchingDatasets,
+    ClaimExtractionDatasets,
+)
 
 
 def eval_k_fold(results):
@@ -55,21 +62,26 @@ def compute_metrics_law_matching(eval_pred):
     return metric.compute(predictions=predictions, references=labels)
 
 
-def report_cross_validation_results():
-    pass
-
-
-def report_one_pass_results(dataset, results, parameters):
-    path = "/data/experiments/dehio/results"
-    if not os.path.exists(path):
-        os.mkdir(path)
-    name = f'Run: {datetime.today().strftime("%c")}'
-    os.mkdir("name")
-    dataset.save_to_disk(path + f"/{name}/dataset")
-
-    with open(path + "results/{name}/results.txt", "w+") as file:
-        file.write(str(results))
-        file.write(str(parameters))
+def report_results(
+    task,
+    results,
+    datasets: Union[LawMatchingDatasets, ClaimExtractionDatasets],
+    parameters=None,
+):
+    path = "/data/experiments/dehio/bachelor_thesis/results"
+    run = 0
+    date = datetime.today().strftime("%d.%m.%y")
+    name_of_run = f"{task}_{date}_{run}"
+    while os.path.exists(f"{path}/{name_of_run}"):
+        run += 1
+        name_of_run = f"{task}_{date}_{run}"
+    full_path = f"{path}/{name_of_run}"
+    os.mkdir(full_path)
+    with open(f"{full_path}/results.txt", "w+") as file:
+        if parameters:
+            file.write(json.dumps(parameters, indent=2))
+        file.write(json.dumps(results, indent=2))
+    datasets.save_to_csv(f"{full_path}/dataset.csv")
 
 
 def num_of_examples_without_claims(dataset):
