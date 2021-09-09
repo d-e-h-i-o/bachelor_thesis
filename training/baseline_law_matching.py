@@ -45,13 +45,13 @@ def calculate_baseline_law_matching(from_file: Optional[str]):
     datasets = LawMatchingDatasets.load_from_csv(from_file)
     results = []
 
-    for (x_train, y_train), (x_test, y_test) in datasets.folds:
+    for train_set, test_set in datasets.folds:
+        x_train, y_train = preprocess(train_set)
+        x_test, y_test = preprocess(test_set)
         classifier.fit(x_train, y_train)
         predictions = classifier.predict(x_test)
         result = metric.compute(predictions=predictions, references=y_test)
         results.append(result)
-
-        print(f"Results for fold {i}: {result}")
 
     print(f"Overall results: {eval_k_fold(results)}")
     report_results("baseline", eval_k_fold(results), datasets)
