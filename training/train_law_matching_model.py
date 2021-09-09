@@ -89,11 +89,15 @@ def train_law_matching(
 
     if cross_validation:
         for i, (train_set, test_set) in enumerate(datasets.folds):
-            trainer, _ = train_law_matching_model(train_set, test_set, args)
+            trainer, model = train_law_matching_model(train_set, test_set, args)
             result = trainer.evaluate()
-            results.append(result)
+            results.append(result.copy())
 
+            torch.cuda.empty_cache()
+            del trainer
+            del model
             print(f"Results for fold {i}: {result}")
+            del result
 
         print(f"Overall results: {eval_k_fold(results)}")
         report_results(
