@@ -139,6 +139,12 @@ class ClaimExtractionDatasets:
         cursor.close()
         return cls(rows, folds=folds)
 
+    def save_to_csv(self, file_name):
+        with open(file_name, "w+", newline="") as csvfile:
+            writer = csv.writer(csvfile, delimiter=";")
+            for sample in self.X:
+                writer.writerow(sample)
+
     def save_to_disk(self, file_path, with_healtcheck=False):
         with open(file_path, "w+") as file:
             writer = csv.writer(file)
