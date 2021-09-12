@@ -29,7 +29,7 @@ class ClaimExtractionDatasets:
     TASK = "claim_extraction"
 
     def __init__(self, rows, folds):
-        self.kf = KFold(n_splits=folds)
+        self.kf = KFold(n_splits=folds, shuffle=True)
         self.X: List[ClaimExtractionSample] = []
         grouped_rows = self.group_rows(rows)
         nlp = spacy.load("de_core_news_sm")
