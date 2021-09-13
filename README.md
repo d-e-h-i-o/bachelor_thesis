@@ -2,11 +2,11 @@
 
 This is the repository for my bachelor thesis `Claim retrieval and matching with laws for COVID-19 related legislation`.
 
-It is concerned with the following goals:
-- Define the claim extraction task (extract claims about Covid-19 related laws from newspaper articles)
-- Define the law matching task (match those claims with the laws that are referenced in the claim)
-- Collect datasets for both tasks
-- Train models for both tasks
+The contributions of this thesis are the following:
+- A definition of the legal claim extraction task and the law matching task, including a model of underlying concepts like claims.
+- Two labeled datasets for those tasks.
+- Several trained models with benchmarks, including open source code for data pre-processing and model training.
+- Proposals for future work.
 
 ## Table of Contents
 [1. Setup](#setup)  
@@ -17,6 +17,8 @@ It is concerned with the following goals:
 ## Setup
 
 ```console
+git clone https://github.com/d-e-h-i-o/bachelor_thesis.git
+cd bachelor_thesis
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
@@ -55,8 +57,8 @@ e.g. ``python training law-matching --epochs 10 --no-cross-validation --inspect`
 
 ## Database
 
-The SQLite database is called `database.db`. It contains the claim extraction and law matching data.
-See [initial_migration.sql](initial_migration.sql) for the data format or `sqlite3 database.db -cmd .schema`
+The SQLite database is called `database.db`. It contains the claim extraction and law matching data. For the data format 
+see [initial_migration.sql](initial_migration.sql) or `sqlite3 database.db -cmd .schema`
 
 ## Legislation
 
@@ -67,13 +69,13 @@ respective validity dates. Currently, the following legislation is there:
 - 3\. InfSChMV
 - Corona-ArbSchV
 - GroßveranstVerbV
-- SARS-CoV-2-EindV.json
-- Zweite Pflegemaßnahmen-Covid-19-Verordnung.json
-- 3\. PflegeM-Cov-19-V.json
-- Krankenhaus-Covid-19-Verordnung.json
-- SARS-CoV-2-Infektionsschutzverordnung.json
+- SARS-CoV-2-EindV
+- Zweite Pflegemaßnahmen-Covid-19-Verordnung
+- 3\. PflegeM-Cov-19-V
+- Krankenhaus-Covid-19-Verordnung
+- SARS-CoV-2-Infektionsschutzverordnung
 
-The are formatted like this:
+The filename is `{abbreviation}.json`. The format is:
 ```json
 {
   "name": "SARS-CoV-2-Arbeitsschutzverordnung",
@@ -90,7 +92,7 @@ The are formatted like this:
 }
 ```
 
-#### Scraping and parsing new legislation
+### Scraping and parsing new legislation
 For scraping and parsing new legislation from [gesetze.berlin.de](gesetze.berlin.de), their url should be placed in the `law_scraping/data/urls` folder.
 
 #### Scrape
