@@ -5,6 +5,5 @@
 package-lock.json
 package.json
 node_modules
-*.csv
 tests/vcr
 *.pytest_cache
