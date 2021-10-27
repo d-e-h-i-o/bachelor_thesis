@@ -64,16 +64,19 @@ see [initial_migration.sql](initial_migration.sql) or `sqlite3 database.db -cmd 
 
 The legislation text can be found in the [legislation folder](legislation). The json files contain the section with their
 respective validity dates. Currently, the following legislation is there:
-- 1\. InfSchMV
-- 2\. InfSchMV
-- 3\. InfSChMV
-- Corona-ArbSchV
-- GroßveranstVerbV
-- SARS-CoV-2-EindV
-- Zweite Pflegemaßnahmen-Covid-19-Verordnung
-- 3\. PflegeM-Cov-19-V
-- Krankenhaus-Covid-19-Verordnung
-- SARS-CoV-2-Infektionsschutzverordnung
+- 1\. InfSchMV (from 16.12.2020 to 06.03.2021)
+- 2\. InfSchMV (from 07.03.2021 to 17.06.2021)
+- 3\. InfSChMV (from 18.06.2021 to 06.11.2021)
+- Corona-ArbSchV (from 27.01.2021 to 10.09.2021)
+- GroßveranstVerbV (from 22.04.2020 to 26.06.2020)
+- SARS-CoV-2-EindV (from 14.03.2020 to 17.03.2020)
+- Zweite Pflegemaßnahmen-Covid-19-Verordnung (from 25.02.2021 to 23.06.2021)
+- 3\. PflegeM-Cov-19-V (from 24.06.2021 to 10.09.2021)
+- Krankenhaus-Covid-19-Verordnung (from 17.10.2020 to 27.02.2021)
+- Zweite Krankenhaus-Covid-19-Verordnung (from 25.02.2021 to 14.08.2021)
+- SARS-CoV-2-Infektionsschutzverordnung (from 27.06.2020 to 15.12.2020)
+- SchulHygCoV-19-VO (from 28.11.2020 to 08.08.2021)
+- SARS-CoV-2-EindmaßnV (from 18.03.2020 to 26.06.2020)
 
 The filename is `{abbreviation}.json`. The format is:
 ```json
