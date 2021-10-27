@@ -105,7 +105,7 @@ Options:
   --file-with-urls TEXT  File in data/urls/{file} with urls to scrape
   --help                 Show this message and exit.
 ```
-e.g. `python law_scraping scrape --file_with_urls SchulHygCoV-19-VO.json`
+e.g. `python law_scraping scrape --file-with-urls SchulHygCoV-19-VO.json`
 
 #### Parse
 ```
