@@ -53,7 +53,7 @@ def train_claim_extraction(
     if cross_validation:
         for i, (train_set, test_set) in enumerate(datasets.folds):
             model = AutoModelForTokenClassification.from_pretrained(
-                model_checkpoint, num_labels=3
+                model_checkpoint, num_labels=3, ignore_mismatched_sizes=True
             )
             train_dataset = preprocessor(train_set)
             test_dataset = preprocessor(test_set)
@@ -84,7 +84,7 @@ def train_claim_extraction(
         )
     else:
         model = AutoModelForTokenClassification.from_pretrained(
-            model_checkpoint, num_labels=3
+            model_checkpoint, num_labels=3, ignore_mismatched_sizes=True
         )
 
         train_dataset = preprocessor(datasets.train)
