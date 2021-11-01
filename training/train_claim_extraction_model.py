@@ -40,7 +40,13 @@ def train_claim_extraction(
     model_name = model_checkpoint.split("/")[-1]
 
     datasets = ClaimExtractionDatasets.load_from_database()
-    tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+    try:
+        tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+    except EnvironmentError:
+        tokenizer = AutoTokenizer.from_pretrained(
+            "deepset/gbert-large"
+        )  # in case only model weights were saved
+
     preprocessor = Preprocessor(tokenizer, "claim_extraction")
     results = []
 
