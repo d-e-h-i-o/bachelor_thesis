@@ -5,6 +5,7 @@ import torch
 from transformers import (
     TrainingArguments,
     IntervalStrategy,
+    AutoTokenizer,
 )
 
 from preprocessing.datasets_ import LawMatchingDatasets
@@ -17,8 +18,11 @@ from baseline_law_matching import train_baseline
 from baseline_law_matching import (
     indices_of_wrong_classifications as baseline_wrong_indices,
 )
+from preprocessing import Preprocessor
 
 model_checkpoint = "deepset/gbert-large"
+tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+preprocessor = Preprocessor(tokenizer, "law_matching")
 
 args = TrainingArguments(
     f"/data/experiments/dehio/models/test-law-matching-{randint(0, 100000)}",
@@ -39,13 +43,15 @@ def evaluate():
     wrong_predictions = []
 
     for i, (train_set, test_set) in enumerate(datasets.folds):
-        trainer, _ = train_law_matching_model(train_set, test_set, args)
+        trainer, _ = train_law_matching_model(
+            train_set, test_set, args, model_checkpoint, preprocessor, tokenizer
+        )
         classifier = train_baseline(train_set)
 
         baseline_indices = baseline_wrong_indices(test_set, classifier)
         with torch.no_grad():
             torch.cuda.empty_cache()
-            bert_indices = bert_wrong_indices(test_set, trainer)
+            bert_indices = bert_wrong_indices(test_set, trainer, preprocessor)
 
         for i in range(len(test_set)):
             if i in baseline_indices or i in bert_indices:

@@ -17,13 +17,10 @@ from preprocessing.datasets_ import LawMatchingDatasets
 
 from utils import eval_k_fold, compute_metrics_law_matching, report_results
 
-model_checkpoint = "deepset/gbert-large"
-model_name = model_checkpoint.split("/")[-1]
-tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-preprocessor = Preprocessor(tokenizer, "law_matching")
 
-
-def train_law_matching_model(train_set, test_set, args):
+def train_law_matching_model(
+    train_set, test_set, args, model_checkpoint, preprocessor, tokenizer
+):
     model = AutoModelForSequenceClassification.from_pretrained(
         model_checkpoint, num_labels=2
     )
@@ -42,7 +39,7 @@ def train_law_matching_model(train_set, test_set, args):
     return trainer, model
 
 
-def indices_of_wrong_classifications(test_dataset, trainer):
+def indices_of_wrong_classifications(test_dataset, trainer, preprocessor):
     metric = load_metric("glue", "mrpc")
     test_dataset = preprocessor(test_dataset)
     logits, labels, _ = trainer.predict(test_dataset)
@@ -68,7 +65,12 @@ def train_law_matching(
     inspect: bool = False,
     learning_rate: float = 2e-5,
     from_file: Optional[str] = None,
+    model_checkpoint: str = "deepset/gbert-large",
 ):
+    model_name = model_checkpoint.split("/")[-1]
+    tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+    preprocessor = Preprocessor(tokenizer, "law_matching")
+
     args = TrainingArguments(
         f"/data/experiments/dehio/models/test-law-matching-{randint(0, 100000)}",
         evaluation_strategy=IntervalStrategy.EPOCH,
@@ -89,7 +91,9 @@ def train_law_matching(
 
     if cross_validation:
         for i, (train_set, test_set) in enumerate(datasets.folds):
-            trainer, model = train_law_matching_model(train_set, test_set, args)
+            trainer, model = train_law_matching_model(
+                train_set, test_set, args, model_checkpoint, preprocessor, tokenizer
+            )
             result = trainer.evaluate()
             results.append(result.copy())
 
@@ -111,7 +115,14 @@ def train_law_matching(
             },
         )
     else:
-        trainer, model = train_law_matching_model(datasets.train, datasets.test, args)
+        trainer, model = train_law_matching_model(
+            datasets.train,
+            datasets.test,
+            args,
+            model_checkpoint,
+            preprocessor,
+            tokenizer,
+        )
 
         if inspect:
             test_dataset = preprocessor(datasets.test)

@@ -31,13 +31,15 @@ pip install -r requirements.txt
 Usage: training claim-extraction [OPTIONS]
 
 Options:
-  --epochs INTEGER                [default: 3]
+  --epochs INTEGER                Number of epochs  [default: 3]
   --cross-validation / --no-cross-validation
-                                  [default: True]
-  --inspect / --no-inspect        [default: False]
+                                  5-fold cross validation  [default: True]
+  --inspect / --no-inspect        Sets breakpoint after model was trained, to
+                                  interactively inspect results.  [default:
+                                  False]
+
   --learning-rate FLOAT           [default: 2e-05]
-  --filter-examples-without-claims / --no-filter-examples-without-claims
-                                  [default: False]
+  --model-checkpoint TEXT         [default: deepset/gbert-large]
   --help                          Show this message and exit.
 ````
 e.g. ``python training claim-extraction --epochs 10``
@@ -46,11 +48,16 @@ e.g. ``python training claim-extraction --epochs 10``
 Usage: training law-matching [OPTIONS]
 
 Options:
-  --epochs INTEGER                [default: 3]
+  --epochs INTEGER                Number of epochs  [default: 3]
   --cross-validation / --no-cross-validation
-                                  [default: True]
-  --inspect / --no-inspect        [default: False]
+                                  5-fold cross validation  [default: True]
+  --inspect / --no-inspect        Sets breakpoint after model was trained, to
+                                  interactively inspect results.  [default:
+                                  False]
+
   --learning-rate FLOAT           [default: 2e-05]
+  --from-file TEXT                Load dataset from csv file with this path.
+  --model-checkpoint TEXT         [default: deepset/gbert-large]
   --help                          Show this message and exit.
 ````
 e.g. ``python training law-matching --epochs 10 --no-cross-validation --inspect``

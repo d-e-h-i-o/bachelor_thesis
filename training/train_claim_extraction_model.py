@@ -19,15 +19,13 @@ from utils import (
     report_results,
 )
 
-model_checkpoint = "deepset/gbert-large"
-model_name = model_checkpoint.split("/")[-1]
-
 
 def train_claim_extraction(
     epochs: int = 3,
     cross_validation: bool = True,
     inspect: bool = False,
     learning_rate: float = 2e-5,
+    model_checkpoint: str = "deepset/gbert-large",
 ):
     args = TrainingArguments(
         f"/data/experiments/dehio/models/test-claim-extraction-{randint(0, 100000)}",
@@ -39,6 +37,7 @@ def train_claim_extraction(
         num_train_epochs=epochs,
         weight_decay=0.01,
     )
+    model_name = model_checkpoint.split("/")[-1]
 
     datasets = ClaimExtractionDatasets.load_from_database()
     tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
