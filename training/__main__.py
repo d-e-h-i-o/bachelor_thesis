@@ -4,6 +4,7 @@ from train_claim_extraction_model import train_claim_extraction
 from train_law_matching_model import train_law_matching
 from baseline_law_matching import calculate_baseline_law_matching
 from evaluate_law_matching import evaluate as _evaluate
+from experiment1 import run_experiment1
 
 app = typer.Typer()
 
@@ -17,10 +18,13 @@ def claim_extraction(
         help="Sets breakpoint after model was trained, to interactively inspect results.",
     ),
     learning_rate: float = 2e-5,
+    from_file: str = typer.Option(
+        None, help="Load dataset from csv file with this path."
+    ),
     model_checkpoint: str = typer.Option("deepset/gbert-large"),
 ):
     train_claim_extraction(
-        epochs, cross_validation, inspect, learning_rate, model_checkpoint
+        epochs, cross_validation, inspect, learning_rate, from_file, model_checkpoint
     )
 
 
@@ -41,6 +45,11 @@ def law_matching(
     train_law_matching(
         epochs, cross_validation, inspect, learning_rate, from_file, model_checkpoint
     )
+
+
+@app.command()
+def experiment1():
+    run_experiment1()
 
 
 @app.command()
