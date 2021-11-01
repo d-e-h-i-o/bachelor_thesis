@@ -61,14 +61,18 @@ class LawMatchingDatasets:
         self,
         input: Union[List[DBRow], NDArray[LawMatchingSample]],
         folds,
-        needs_preprocessing=True,
+        mode="preprocess",
     ):
         self.kf = KFold(n_splits=folds)
         self.acts = self.load_legislation()
-        if needs_preprocessing:
+        if mode == "preprocess":
             self.X = self.parse_rows(input)
-        else:
+        elif mode == "inspect":
+            self.X = self.prepare_for_inspection(input)
+        elif mode == "no_preprocessing":
             self.X = input
+        else:
+            raise Exception("Not a supported mode")
 
         self.train_split, self.test_split = next(
             ShuffleSplit(n_splits=1, test_size=0.20).split(self.X)
@@ -114,8 +118,26 @@ class LawMatchingDatasets:
 
         return np.array(samples, dtype=object)
 
+    def prepare_for_inspection(self, rows: List[DBRow]) -> NDArray[LawMatchingSample]:
+        samples: List[LawMatchingSample] = []
+
+        for claim, reference_string, date_string in rows:
+            claim = claim.strip()
+            references = parse_references(reference_string)
+            date = datetime.strptime(date_string, "%d.%m.%y").date()
+            subsections = ""
+            for reference in references:
+                reference_text = resolve_reference_to_subsection_text(
+                    reference, self.acts, date
+                )
+                subsections += f"\n {reference_text}"
+            sample = (claim, subsections, True)
+            samples.append(sample)
+
+        return np.array(samples, dtype=object)
+
     @classmethod
-    def load_from_database(cls, database="database.db", folds=5):
+    def load_from_database(cls, database="database.db", folds=5, for_inspection=False):
         connection = sqlite3.connect(database)
         cursor = connection.cursor()
         cursor.execute(
@@ -125,7 +147,8 @@ class LawMatchingDatasets:
         )
         rows = cursor.fetchall()
         cursor.close()
-        return cls(rows, folds=folds)
+        mode = "inspect" if for_inspection else "preprocess"
+        return cls(rows, mode=mode, folds=folds)
 
     @classmethod
     def load_from_csv(cls, file_name, folds=5):
@@ -135,7 +158,7 @@ class LawMatchingDatasets:
             reader = csv.reader(csvfile, delimiter=";")
             for row in reader:
                 rows.append([row[0], row[1], to_bool(row[2])])
-        return cls(np.array(rows, dtype=object), needs_preprocessing=False, folds=folds)
+        return cls(np.array(rows, dtype=object), mode="no_preprocessing", folds=folds)
 
     def save_to_csv(self, file_name):
         with open(file_name, "w+", newline="") as csvfile:
