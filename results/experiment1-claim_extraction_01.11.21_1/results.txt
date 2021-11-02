@@ -1,0 +1,24 @@
+{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "deepset/gbert-large"
+}{
+  "eval_loss": 1.013364052772522,
+  "eval_precision": 0.31509605498023674,
+  "eval_recall": 0.46722305718739243,
+  "eval_f1": 0.37552717765538207,
+  "eval_accuracy": 0.8301737484985343,
+  "eval_runtime": 1.2554599999999998,
+  "eval_samples_per_second": 12.592700000000002,
+  "eval_steps_per_second": 3.1893000000000002,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.24057620343668976,
+  "eval_precision_stdev": 0.1398661692462996,
+  "eval_recall_stdev": 0.19399719360884307,
+  "eval_f1_stdev": 0.16179524149885127,
+  "eval_accuracy_stdev": 0.12015765552351876,
+  "eval_runtime_stdev": 0.042103053465409296,
+  "eval_samples_per_second_stdev": 0.39278946863003683,
+  "eval_steps_per_second_stdev": 0.10537662612426596,
+  "epoch_stdev": 0.0
+}

@@ -1,0 +1,24 @@
+{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "deepset/gelectra-base"
+}{
+  "eval_loss": 0.8830542683601379,
+  "eval_precision": 0.33318747157617207,
+  "eval_recall": 0.472258171475197,
+  "eval_f1": 0.38901362827829733,
+  "eval_accuracy": 0.8475854839503254,
+  "eval_runtime": 0.8500533333333332,
+  "eval_samples_per_second": 18.602400000000003,
+  "eval_steps_per_second": 4.710800000000001,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.10399580116133544,
+  "eval_precision_stdev": 0.0418199743503599,
+  "eval_recall_stdev": 0.06552705531476202,
+  "eval_f1_stdev": 0.044004751052505675,
+  "eval_accuracy_stdev": 0.0185037335290254,
+  "eval_runtime_stdev": 0.029187910086850948,
+  "eval_samples_per_second_stdev": 0.676039601545015,
+  "eval_steps_per_second_stdev": 0.1629943907886754,
+  "epoch_stdev": 0.0
+}
