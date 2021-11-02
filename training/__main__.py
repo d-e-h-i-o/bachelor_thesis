@@ -18,13 +18,10 @@ def claim_extraction(
         help="Sets breakpoint after model was trained, to interactively inspect results.",
     ),
     learning_rate: float = 2e-5,
-    from_file: str = typer.Option(
-        None, help="Load dataset from csv file with this path."
-    ),
     model_checkpoint: str = typer.Option("deepset/gbert-large"),
 ):
     train_claim_extraction(
-        epochs, cross_validation, inspect, learning_rate, from_file, model_checkpoint
+        epochs, cross_validation, inspect, learning_rate, model_checkpoint
     )
 
 
