@@ -1,0 +1,24 @@
+{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "/data/experiments/dehio/germeval2021/experiments/models/4f975e12f0255e5e185c4f41334c5284e64bea06d7da465bba3c8250da9f4c54_gelectra-large_fact"
+}{
+  "eval_loss": 1.0283452415466308,
+  "eval_precision": 0.40997510122603564,
+  "eval_recall": 0.532059514087889,
+  "eval_f1": 0.4623692468782404,
+  "eval_accuracy": 0.8722528141633312,
+  "eval_runtime": 1.2683,
+  "eval_samples_per_second": 12.46456,
+  "eval_steps_per_second": 3.15652,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.1756014032753131,
+  "eval_precision_stdev": 0.05273133415120578,
+  "eval_recall_stdev": 0.06133848814802918,
+  "eval_f1_stdev": 0.053697036245498805,
+  "eval_accuracy_stdev": 0.02007655350609327,
+  "eval_runtime_stdev": 0.038424362931175154,
+  "eval_samples_per_second_stdev": 0.38193543084313764,
+  "eval_steps_per_second_stdev": 0.09414754378102491,
+  "epoch_stdev": 0.0
+}
