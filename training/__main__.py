@@ -5,6 +5,7 @@ from train_law_matching_model import train_law_matching
 from baseline_law_matching import calculate_baseline_law_matching
 from evaluate_law_matching import evaluate as _evaluate
 from experiment1 import run_experiment1
+from experiment2 import run_experiment2
 
 app = typer.Typer()
 
@@ -47,6 +48,11 @@ def law_matching(
 @app.command()
 def experiment1():
     run_experiment1()
+
+
+@app.command()
+def experiment2():
+    run_experiment2()
 
 
 @app.command()
