@@ -98,22 +98,21 @@ def run_experiment2(
 ):
 
     datasets = ClaimExtractionDatasets.load_from_database()
+    for i, (train_set, test_set) in enumerate(datasets.folds):
+        for model_checkpoint, seed in [
+            ("deepset/gbert-large", 0),
+            ("deepset/gelectra-large", 0),
+        ]:
+            try:
+                tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+            except EnvironmentError:
+                tokenizer = AutoTokenizer.from_pretrained(
+                    "deepset/gbert-large"
+                )  # in case only model weights were saved
 
-    for model_checkpoint, seed in [
-        ("deepset/gbert-large", 0),
-        ("deepset/gelectra-large", 0),
-    ]:
-        try:
-            tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
-        except EnvironmentError:
-            tokenizer = AutoTokenizer.from_pretrained(
-                "deepset/gbert-large"
-            )  # in case only model weights were saved
+            preprocessor = Preprocessor(tokenizer, "claim_extraction")
+            results = []
 
-        preprocessor = Preprocessor(tokenizer, "claim_extraction")
-        results = []
-
-        for i, (train_set, test_set) in enumerate(datasets.folds):
             model = AutoModelForTokenClassification.from_pretrained(
                 model_checkpoint, num_labels=3, ignore_mismatched_sizes=True
             )
@@ -151,15 +150,3 @@ def run_experiment2(
                 model_checkpoint.split("/")[1] + f"_fold{i}",
             )
             print(f"Results for fold {i}: {result}")
-
-        print(f"Overall results: {eval_k_fold(results)}")
-        report_results(
-            "experiment2-claim_extraction",
-            eval_k_fold(results),
-            datasets,
-            parameters={
-                "epochs": epochs,
-                "learning_rate": learning_rate,
-                "model": model_checkpoint,
-            },
-        )
