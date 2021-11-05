@@ -68,7 +68,7 @@ def run_experiment3(
 ):
 
     datasets = LawMatchingDatasets.load_from_csv(
-        "results/law_matching_09.09.21_1/results.txt"
+        "results/law_matching_09.09.21_1/dataset.csv"
     )
 
     results = {
@@ -80,7 +80,7 @@ def run_experiment3(
 
     for i, (train_set, test_set) in enumerate(datasets.folds):
         for model_checkpoint in results.keys():
-            tokenizer = AutoTokenizer.from_pretrained()
+            tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
             preprocessor = Preprocessor(tokenizer, "law_matching")
             for run in range(5):
                 args = TrainingArguments(
