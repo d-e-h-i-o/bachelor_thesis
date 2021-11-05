@@ -29,7 +29,7 @@ def check_token(prediction, label):
     if prediction == 2 and label == 2:
         "Correctly predicted as being part of the claim"
         return "green"
-    if (prediction == 1 and label == 2):
+    if prediction == 1 and label == 2:
         "Correctly predicted as claim, but should be inside of claim"
         return "lightgreen"
     if prediction == 2 and label == 1:
