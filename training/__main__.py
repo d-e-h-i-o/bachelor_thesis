@@ -6,6 +6,7 @@ from baseline_law_matching import calculate_baseline_law_matching
 from evaluate_law_matching import evaluate as _evaluate
 from experiment1 import run_experiment1
 from experiment2 import run_experiment2
+from experiment3 import run_experiment3
 
 app = typer.Typer()
 
@@ -53,6 +54,11 @@ def experiment1():
 @app.command()
 def experiment2():
     run_experiment2()
+
+
+@app.command()
+def experiment3():
+    run_experiment3()
 
 
 @app.command()

@@ -62,7 +62,7 @@ def indices_of_wrong_classifications(test_dataset, trainer, preprocessor):
     return wrong_predictions
 
 
-def train_law_matching(
+def run_experiment3(
     epochs: int = 3,
     learning_rate: float = 0.00001,
 ):
