@@ -129,8 +129,12 @@ class ClaimExtractionDatasets:
         return return_claim
 
     @classmethod
-    def load_from_database(cls, database="database.db", folds=5):
+    def load_from_database(
+        cls, database="/data/experiments/dehio/bachelor_thesis/database.db", folds=5
+    ):
+
         connection = sqlite3.connect(database)
+
         cursor = connection.cursor()
         cursor.execute(
             "SELECT f.url, plaintext, claim FROM fulltext f INNER JOIN claims c on f.url=c.url"
