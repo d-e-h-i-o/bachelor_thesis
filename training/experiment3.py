@@ -109,23 +109,23 @@ def run_experiment3(
                 print(f"Results for fold {i}: {result}")
                 del result
 
-        path = "/data/experiments/dehio/bachelor_thesis/results"
-        for model_checkpoint, result_dict in results.items():
-            date = datetime.today().strftime("%d.%m.%y")
-            full_path = f"{path}/experiment3_{model_checkpoint.split('/')[-1]}{date}"
-            os.mkdir(full_path)
-            with open(f"{full_path}/results.txt", "w+") as file:
-                file.write(
-                    json.dumps(
-                        {
-                            "epochs": epochs,
-                            "learning_rate": learning_rate,
-                            "model": model_checkpoint,
-                        },
-                        indent=2,
-                    )
+    path = "/data/experiments/dehio/bachelor_thesis/results"
+    for model_checkpoint, result_dict in results.items():
+        date = datetime.today().strftime("%d.%m.%y")
+        full_path = f"{path}/experiment3_{model_checkpoint.split('/')[-1]}{date}"
+        os.mkdir(full_path)
+        with open(f"{full_path}/results.txt", "w+") as file:
+            file.write(
+                json.dumps(
+                    {
+                        "epochs": epochs,
+                        "learning_rate": learning_rate,
+                        "model": model_checkpoint,
+                    },
+                    indent=2,
                 )
-                for run, run_result in result_dict.items():
-                    file.write(f"\nRun{run}")
-                    file.write(json.dumps(eval_k_fold(run_result), indent=2))
-            datasets.save_to_csv(f"{full_path}/dataset.csv")
+            )
+            for run, run_result in result_dict.items():
+                file.write(f"\nRun{run}")
+                file.write(json.dumps(eval_k_fold(run_result), indent=2))
+        datasets.save_to_csv(f"{full_path}/dataset.csv")
