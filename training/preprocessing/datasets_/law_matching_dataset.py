@@ -196,7 +196,9 @@ class LawMatchingDatasets:
                 return reference
 
     @classmethod
-    def load_legislation(cls, path="legislation"):
+    def load_legislation(
+        cls, path="/data/experiments/dehio/bachelor_thesis/legislation"
+    ):
         acts = []
         for file_name in os.listdir(path):
             acts.append(Act.from_file(f"{path}/{file_name}"))
