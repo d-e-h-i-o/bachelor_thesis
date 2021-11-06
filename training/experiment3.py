@@ -13,6 +13,7 @@ from transformers import (
     AutoTokenizer,
     IntervalStrategy,
     AutoModelForSequenceClassification,
+    set_seed,
 )
 
 from preprocessing import Preprocessor
@@ -66,7 +67,7 @@ def run_experiment3(
     epochs: int = 3,
     learning_rate: float = 0.00001,
 ):
-
+    set_seed(0)
     datasets = LawMatchingDatasets.load_from_csv(
         "/data/experiments/dehio/bachelor_thesis/results/law_matching_09.09.21_1/dataset.csv"
     )
