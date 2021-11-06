@@ -68,7 +68,7 @@ def run_experiment3(
 ):
 
     datasets = LawMatchingDatasets.load_from_csv(
-        "results/law_matching_09.09.21_1/dataset.csv"
+        "/data/experiments/dehio/bachelor_thesis/results/law_matching_09.09.21_1/dataset.csv"
     )
 
     results = {
