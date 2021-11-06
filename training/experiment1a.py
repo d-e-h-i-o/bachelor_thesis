@@ -30,22 +30,12 @@ def run_experiment1a(
     datasets = ClaimExtractionDatasets.load_from_database()
 
     results = {
-        "deepset/gbert-large": {1: [], 2: [], 3: [], 4: []},
-        "deepset/gelectra-large": {1: [], 2: [], 3: [], 4: []},
-        "deepset/gbert-base": {1: [], 2: [], 3: [], 4: []},
-        "deepset/gelectra-base": {1: [], 2: [], 3: [], 4: []},
-        "/data/experiments/dehio/germeval2021/experiments/models/d5d3bd2c2ec20360d4e3827411fdfe6e81a7aaf46dcd285c1a8892b4b8b42d63_gbert-large_fact": {
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-        },
-        "/data/experiments/dehio/germeval2021/experiments/models/4f975e12f0255e5e185c4f41334c5284e64bea06d7da465bba3c8250da9f4c54_gelectra-large_fact": {
-            1: [],
-            2: [],
-            3: [],
-            4: [],
-        },
+        "deepset/gbert-large": {},
+        "deepset/gelectra-large": {},
+        "deepset/gbert-base": {},
+        "deepset/gelectra-base": {},
+        "/data/experiments/dehio/germeval2021/experiments/models/d5d3bd2c2ec20360d4e3827411fdfe6e81a7aaf46dcd285c1a8892b4b8b42d63_gbert-large_fact": {},
+        "/data/experiments/dehio/germeval2021/experiments/models/4f975e12f0255e5e185c4f41334c5284e64bea06d7da465bba3c8250da9f4c54_gelectra-large_fact": {},
     }
     for run in range(5):
         for i, (train_set, test_set) in enumerate(datasets.folds):
@@ -103,6 +93,10 @@ def run_experiment1a(
                 trainer.save_model(
                     f"/data/experiments/dehio/models/experiment1a-{model_name}-best"
                 )
+                if model_checkpoint not in results:
+                    results[model_checkpoint] = {}
+                if run not in results[model_checkpoint]:
+                    results[model_checkpoint][run] = []
                 results[model_checkpoint][run].append(result)
 
     date = datetime.today().strftime("%d.%m.%y")
