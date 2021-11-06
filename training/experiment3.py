@@ -99,7 +99,7 @@ def run_experiment3(
                 )
                 result = trainer.evaluate()
                 if run in results[model_checkpoint]:
-                    results[model_checkpoint][run].append(result.copy)
+                    results[model_checkpoint][run].append(result.copy())
                 else:
                     results[model_checkpoint][run] = [result.copy()]
 
