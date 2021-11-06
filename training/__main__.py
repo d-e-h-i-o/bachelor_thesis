@@ -7,6 +7,7 @@ from evaluate_law_matching import evaluate as _evaluate
 from experiment1 import run_experiment1
 from experiment2 import run_experiment2
 from experiment3 import run_experiment3
+from experiment1a import run_experiment1a
 
 app = typer.Typer()
 
@@ -49,6 +50,11 @@ def law_matching(
 @app.command()
 def experiment1():
     run_experiment1()
+
+
+@app.command()
+def experiment1a():
+    run_experiment1a()
 
 
 @app.command()
