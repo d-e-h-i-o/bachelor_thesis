@@ -94,6 +94,7 @@ def save_results(preds_labels_inputs_ids, results, tokenizer, name):
     html = render_html(list_of_samples, results)
     date = datetime.today().strftime("%d.%m.%y")
     path = f"/data/experiments/dehio/bachelor_thesis/results/experiment1b_{date}"
+    os.mkdir(path)
     with open(
         f"{path}/visual_{name}.html",
         "w+",
