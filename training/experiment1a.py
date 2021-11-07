@@ -170,9 +170,11 @@ def run_experiment1a(
                 )
                 trainer.train()
                 result = trainer.evaluate()
+                """
                 trainer.save_model(
                     f"/data/experiments/dehio/models/experiment1a-{model_name}-best"
                 )
+                """
                 if model_checkpoint not in results:
                     results[model_checkpoint] = {}
                 if run not in results[model_checkpoint]:
