@@ -8,6 +8,7 @@ from experiment1 import run_experiment1
 from experiment2 import run_experiment2
 from experiment3 import run_experiment3
 from experiment1a import run_experiment1a
+from experiment1b import run_experiment1b
 
 app = typer.Typer()
 
@@ -55,6 +56,11 @@ def experiment1():
 @app.command()
 def experiment1a():
     run_experiment1a()
+
+
+@app.command()
+def experiment1b():
+    run_experiment1b()
 
 
 @app.command()
