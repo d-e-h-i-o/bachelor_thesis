@@ -28,8 +28,8 @@ class ClaimExtractionDatasets:
 
     TASK = "claim_extraction"
 
-    def __init__(self, rows, folds):
-        self.kf = KFold(n_splits=folds, shuffle=True, random_state=0)
+    def __init__(self, rows, folds, seed=0):
+        self.kf = KFold(n_splits=folds, shuffle=True, random_state=seed)
         self.X: List[ClaimExtractionSample] = []
         grouped_rows = self.group_rows(rows)
         nlp = spacy.load("de_core_news_sm")
@@ -41,7 +41,7 @@ class ClaimExtractionDatasets:
         self.X = self.limit_samples_without_claims(self.X)
         self.X = np.array(self.X, dtype=object)
         self.train_split, self.test_split = next(
-            ShuffleSplit(n_splits=1, test_size=0.15, random_state=0).split(self.X)
+            ShuffleSplit(n_splits=1, test_size=0.15, random_state=seed).split(self.X)
         )
 
     @property
@@ -130,7 +130,10 @@ class ClaimExtractionDatasets:
 
     @classmethod
     def load_from_database(
-        cls, database="/data/experiments/dehio/bachelor_thesis/database.db", folds=5
+        cls,
+        database="/data/experiments/dehio/bachelor_thesis/database.db",
+        folds=5,
+        seed=0,
     ):
 
         connection = sqlite3.connect(database)
@@ -141,7 +144,7 @@ class ClaimExtractionDatasets:
         )
         rows = cursor.fetchall()
         cursor.close()
-        return cls(rows, folds=folds)
+        return cls(rows, folds=folds, seed=seed)
 
     def save_to_csv(self, file_name):
         with open(file_name, "w+", newline="") as csvfile:

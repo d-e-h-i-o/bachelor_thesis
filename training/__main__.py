@@ -9,6 +9,7 @@ from experiment2 import run_experiment2
 from experiment3 import run_experiment3
 from experiment1a import run_experiment1a
 from experiment1b import run_experiment1b
+from experiment4 import run_experiment4
 
 app = typer.Typer()
 
@@ -46,6 +47,18 @@ def law_matching(
     train_law_matching(
         epochs, cross_validation, inspect, learning_rate, from_file, model_checkpoint
     )
+
+
+@app.command()
+def experiment(nr: int):
+    if nr == 1:
+        pass
+    elif nr == 2:
+        run_experiment2()
+    elif nr == 3:
+        run_experiment3()
+    elif nr == 4:
+        run_experiment4()
 
 
 @app.command()
