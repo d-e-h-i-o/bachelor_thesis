@@ -93,7 +93,6 @@ def save_results(preds_labels_inputs_ids, results, tokenizer, name):
         map(lambda t: create_inspection_list(*t), preds_labels_inputs_ids),
     )
     html = render_html(list_of_samples, results)
-    os.mkdir(PATH)
     with open(
         f"{PATH}/visual_{name}.html",
         "w+",
@@ -107,6 +106,8 @@ def run_experiment4(
 ):
 
     set_seed(0)
+
+    os.mkdir(PATH)
 
     results = {
         "deepset/gbert-base": {},
@@ -168,7 +169,6 @@ def run_experiment4(
                     model_name + f"_fold{i}",
                 )
 
-    os.mkdir(PATH)
     datasets.save_to_csv(f"{PATH}/dataset.csv")
     with open(f"{PATH}/results.txt", "w+") as file:
         for model_checkpoint, seed_dict in results.items():
