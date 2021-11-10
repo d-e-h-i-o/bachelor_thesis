@@ -93,6 +93,7 @@ def save_results(preds_labels_inputs_ids, results, tokenizer, name):
         map(lambda t: create_inspection_list(*t), preds_labels_inputs_ids),
     )
     html = render_html(list_of_samples, results)
+    os.mkdir(PATH)
     with open(
         f"{PATH}/visual_{name}.html",
         "w+",
