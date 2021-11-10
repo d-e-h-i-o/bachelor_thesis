@@ -29,7 +29,7 @@ class ClaimExtractionDatasets:
     TASK = "claim_extraction"
 
     def __init__(self, rows, folds):
-        self.kf = KFold(n_splits=folds, shuffle=True)
+        self.kf = KFold(n_splits=folds, shuffle=True, random_state=0)
         self.X: List[ClaimExtractionSample] = []
         grouped_rows = self.group_rows(rows)
         nlp = spacy.load("de_core_news_sm")
@@ -41,7 +41,7 @@ class ClaimExtractionDatasets:
         self.X = self.limit_samples_without_claims(self.X)
         self.X = np.array(self.X, dtype=object)
         self.train_split, self.test_split = next(
-            ShuffleSplit(n_splits=1, test_size=0.15).split(self.X)
+            ShuffleSplit(n_splits=1, test_size=0.15, random_state=0).split(self.X)
         )
 
     @property
