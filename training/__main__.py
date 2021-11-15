@@ -7,6 +7,7 @@ from evaluate_law_matching import evaluate as _evaluate
 from experiment1 import run_experiment1
 from experiment2 import run_experiment2
 from experiment3 import run_experiment3
+from experiment3a import run_experiment3a
 from experiment1a import run_experiment1a
 from experiment1b import run_experiment1b
 from experiment1c import run_experiment1c
@@ -57,7 +58,7 @@ def experiment(nr: int):
     elif nr == 2:
         run_experiment2()
     elif nr == 3:
-        run_experiment3()
+        run_experiment3a()
     elif nr == 4:
         run_experiment4()
 
