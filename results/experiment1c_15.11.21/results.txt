@@ -1,0 +1,145 @@
+{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "deepset/gbert-large"
+}
+Result over all folds{
+  "eval_loss": 0.3950216114521027,
+  "eval_precision": 0.13465606292823135,
+  "eval_recall": 0.30163303335334407,
+  "eval_f1": 0.183885030503375,
+  "eval_accuracy": 0.8567135998913088,
+  "eval_runtime": 1.3072599999999999,
+  "eval_samples_per_second": 12.1162,
+  "eval_steps_per_second": 3.0694000000000004,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.08545803394669158,
+  "eval_precision_stdev": 0.09398099784208132,
+  "eval_recall_stdev": 0.1876863653307465,
+  "eval_f1_stdev": 0.12120037474405677,
+  "eval_accuracy_stdev": 0.035489281041577246,
+  "eval_runtime_stdev": 0.08180331900357096,
+  "eval_samples_per_second_stdev": 0.6737753334754837,
+  "eval_steps_per_second_stdev": 0.1890325368818818,
+  "epoch_stdev": 0.0
+}{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "deepset/gelectra-large"
+}
+Result over all folds{
+  "eval_loss": 0.4129140317440033,
+  "eval_precision": 0.13504022427023088,
+  "eval_recall": 0.20653991047997708,
+  "eval_f1": 0.1614660670921742,
+  "eval_accuracy": 0.8548962175198731,
+  "eval_runtime": 1.27432,
+  "eval_samples_per_second": 12.4286,
+  "eval_steps_per_second": 3.147,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.07889154354695213,
+  "eval_precision_stdev": 0.09986828328539395,
+  "eval_recall_stdev": 0.1863313357952909,
+  "eval_f1_stdev": 0.1316242502746285,
+  "eval_accuracy_stdev": 0.025867634471569274,
+  "eval_runtime_stdev": 0.07507487595727348,
+  "eval_samples_per_second_stdev": 0.7285823906738346,
+  "eval_steps_per_second_stdev": 0.17269192221988836,
+  "epoch_stdev": 0.0
+}{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "deepset/gbert-base"
+}
+Result over all folds{
+  "eval_loss": 0.3940149128437042,
+  "eval_precision": 0.13488806574790588,
+  "eval_recall": 0.3029019301383341,
+  "eval_f1": 0.18550887550093212,
+  "eval_accuracy": 0.8494999389754861,
+  "eval_runtime": 0.9404399999999999,
+  "eval_samples_per_second": 17.026999999999997,
+  "eval_steps_per_second": 4.3166,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.07475109500127419,
+  "eval_precision_stdev": 0.07664814211423196,
+  "eval_recall_stdev": 0.1633071279338306,
+  "eval_f1_stdev": 0.10298569894644254,
+  "eval_accuracy_stdev": 0.03363014586993301,
+  "eval_runtime_stdev": 0.1304017752946638,
+  "eval_samples_per_second_stdev": 2.0900460521242112,
+  "eval_steps_per_second_stdev": 0.5702817724598955,
+  "epoch_stdev": 0.0
+}{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "deepset/gelectra-base"
+}
+Result over all folds{
+  "eval_loss": 0.4373750567436218,
+  "eval_precision": 0.07816622103386808,
+  "eval_recall": 0.08313247360972112,
+  "eval_f1": 0.07954234907526103,
+  "eval_accuracy": 0.8381459059726353,
+  "eval_runtime": 0.9063999999999999,
+  "eval_samples_per_second": 17.440199999999997,
+  "eval_steps_per_second": 4.416600000000001,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.04800007826648586,
+  "eval_precision_stdev": 0.02863088467555139,
+  "eval_recall_stdev": 0.04859138072074695,
+  "eval_f1_stdev": 0.03740460717352186,
+  "eval_accuracy_stdev": 0.02956698667837583,
+  "eval_runtime_stdev": 0.029107730931833206,
+  "eval_samples_per_second_stdev": 0.5647288730001327,
+  "eval_steps_per_second_stdev": 0.1378814708363672,
+  "epoch_stdev": 0.0
+}{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "/data/experiments/dehio/germeval2021/experiments/models/d5d3bd2c2ec20360d4e3827411fdfe6e81a7aaf46dcd285c1a8892b4b8b42d63_gbert-large_fact"
+}
+Result over all folds{
+  "eval_loss": 0.40305882692337036,
+  "eval_precision": 0.07752404962359803,
+  "eval_recall": 0.1698510527478341,
+  "eval_f1": 0.1059810946994744,
+  "eval_accuracy": 0.8512564295070041,
+  "eval_runtime": 1.2933000000000001,
+  "eval_samples_per_second": 12.26,
+  "eval_steps_per_second": 3.1071999999999997,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.08790987341679506,
+  "eval_precision_stdev": 0.06844711198365573,
+  "eval_recall_stdev": 0.1539624836249403,
+  "eval_f1_stdev": 0.09405290242367702,
+  "eval_accuracy_stdev": 0.03169884281338055,
+  "eval_runtime_stdev": 0.10026804077072617,
+  "eval_samples_per_second_stdev": 0.7346138441385379,
+  "eval_steps_per_second_stdev": 0.23125462157544024,
+  "epoch_stdev": 0.0
+}{
+  "epochs": 30,
+  "learning_rate": 2e-05,
+  "model": "/data/experiments/dehio/germeval2021/experiments/models/4f975e12f0255e5e185c4f41334c5284e64bea06d7da465bba3c8250da9f4c54_gelectra-large_fact"
+}
+Result over all folds{
+  "eval_loss": 0.4236442506313324,
+  "eval_precision": 0.15209301950003534,
+  "eval_recall": 0.1885412981195445,
+  "eval_f1": 0.16543234289327696,
+  "eval_accuracy": 0.8587397496652862,
+  "eval_runtime": 1.3334000000000001,
+  "eval_samples_per_second": 11.9346,
+  "eval_steps_per_second": 3.0164,
+  "epoch": 30.0,
+  "eval_loss_stdev": 0.07534987318135009,
+  "eval_precision_stdev": 0.09408521333554994,
+  "eval_recall_stdev": 0.14910857983901,
+  "eval_f1_stdev": 0.11392443145948894,
+  "eval_accuracy_stdev": 0.02781006199868694,
+  "eval_runtime_stdev": 0.11486420243052231,
+  "eval_samples_per_second_stdev": 1.2364771732628146,
+  "eval_steps_per_second_stdev": 0.23998187431554063,
+  "epoch_stdev": 0.0
+}
