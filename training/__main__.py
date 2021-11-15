@@ -9,6 +9,7 @@ from experiment2 import run_experiment2
 from experiment3 import run_experiment3
 from experiment1a import run_experiment1a
 from experiment1b import run_experiment1b
+from experiment1c import run_experiment1c
 from experiment4 import run_experiment4
 
 app = typer.Typer()
@@ -52,7 +53,7 @@ def law_matching(
 @app.command()
 def experiment(nr: int):
     if nr == 1:
-        pass
+        run_experiment1c()
     elif nr == 2:
         run_experiment2()
     elif nr == 3:
