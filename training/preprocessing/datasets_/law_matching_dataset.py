@@ -63,7 +63,7 @@ class LawMatchingDatasets:
         folds,
         mode="preprocess",
     ):
-        self.kf = KFold(n_splits=folds)
+        self.kf = KFold(n_splits=folds, random_state=100)
         self.acts = self.load_legislation()
         if mode == "preprocess":
             self.X = self.parse_rows(input)
