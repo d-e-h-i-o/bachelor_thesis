@@ -147,6 +147,7 @@ def run_experiment3a(
         fieldnames = [
             "Claim",
             "Subsection",
+            "label",
             "deepset/gbert-base",
             "deepset/gbert-large",
             "deepset/gelectra-base",
