@@ -107,7 +107,8 @@ def run_experiment1c(
 
     set_seed(0)
     datasets = ClaimExtractionDatasets.load_from_database(seed=100)
-    os.mkdir(PATH)
+    if not os.path.isdir(PATH):
+        os.mkdir(PATH)
 
     results = {
         "deepset/gbert-large": [],
@@ -136,7 +137,6 @@ def run_experiment1c(
             args = TrainingArguments(
                 f"/data/experiments/dehio/models/experiment1c-{model_name}",
                 evaluation_strategy=IntervalStrategy.EPOCH,
-                save_strategy=IntervalStrategy.EPOCH,
                 learning_rate=learning_rate,
                 per_device_train_batch_size=4,
                 per_device_eval_batch_size=4,
@@ -144,8 +144,6 @@ def run_experiment1c(
                 num_train_epochs=epochs,
                 weight_decay=0.01,
                 seed=0,
-                save_total_limit=5,
-                load_best_model_at_end=True,
             )
             train_dataset = preprocessor(train_set)
             test_dataset = preprocessor(test_set)
