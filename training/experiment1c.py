@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime
+from random import randint
 
 import jinja2
 import numpy as np
@@ -135,7 +136,7 @@ def run_experiment1c(
             )
             model_name = model_checkpoint.split("/")[-1]
             args = TrainingArguments(
-                f"/data/experiments/dehio/models/experiment1c-{model_name}",
+                f"/data/experiments/dehio/models/experiment1c-{model_name}-{randint(0, 100000)}",
                 evaluation_strategy=IntervalStrategy.EPOCH,
                 learning_rate=learning_rate,
                 per_device_train_batch_size=4,
