@@ -2,11 +2,13 @@
 
 This is the repository for my bachelor thesis `Claim retrieval and matching with laws for COVID-19 related legislation`.
 
-The contributions of this thesis are the following:
-- A definition of the legal claim extraction task and the law matching task, including a model of underlying concepts like claims.
-- Two labeled datasets for those tasks.
-- Several trained models with benchmarks, including open source code for data pre-processing and model training.
-- Proposals for future work.
+## Abstract
+
+We examine the feasibility of a fact checking pipeline for claims about COVID-19-related laws in German, and define, implement, and benchmark two of its components: the Claim Extraction task and the Law Matching task. For both we provide hand-annotated data sets. In addition, we provide a data set of 13 COVID-19-related acts from Berlin, where each section is labeled with its applicability period.
+
+We obtain promising results for both tasks with machine learning models based on the Transformer architecture, albeit with some conceptual limitations.
+
+We also discuss challenges of machine learning in the legal domain, and show that complex legal reasoning tasks are insufficiently modeled.
 
 ## Table of Contents
 [1. Setup](#setup)  
