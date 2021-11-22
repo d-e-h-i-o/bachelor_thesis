@@ -24,6 +24,17 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Experiments
+
+The experiments from the thesis can be re-run via ``python training experiment [NR]``. They are
+
+| Experiment Nr. | Description                                               | Section in thesis |
+|----------------|-----------------------------------------------------------|-------------------|
+| 1              | Train & benchmark for Claim Extraction                    | 5.4.1             |
+| 2              | Effect of different fold-composition for Claim Extraction | 5.4.2             |
+| 3              | Visual results for Claim Extraction task                  | 5.4.3             |
+| 4              | Train & benchmark for Law Matching task                   | 6.4.1             |
+
 ## Training
 
 #### Claim extraction
