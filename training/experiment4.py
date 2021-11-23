@@ -65,9 +65,7 @@ def run_experiment4(
     learning_rate: float = 0.00001,
 ):
     set_seed(0)
-    datasets = LawMatchingDatasets.load_from_csv(
-        "/data/experiments/dehio/bachelor_thesis/results/law_matching_09.09.21_1/dataset.csv"
-    )
+    datasets = LawMatchingDatasets.load_from_csv("data/law_matching.csv")
 
     if not os.path.isdir(PATH):
         os.mkdir(PATH)

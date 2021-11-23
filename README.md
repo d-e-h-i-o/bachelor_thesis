@@ -12,9 +12,9 @@ We also discuss challenges of machine learning in the legal domain, and show tha
 
 ## Table of Contents
 [1. Setup](#setup)  
-[2. Training](#training)  
-[3. Database](#database)  
-[4. Legislation](#legislation)  
+[2. Experiments](#experiments)  
+[3. Training](#training)  
+[4. Data sets](#data-sets)
 
 ## Setup
 
@@ -28,7 +28,8 @@ pip install -r requirements.txt
 
 ## Experiments
 
-The experiments from the thesis can be re-run via ``python training experiment [NR]``. They are
+The experiments from the thesis can be re-run via ``python training experiment [NR]``. All random seeds are set,
+making the experiments reproducible. 
 
 | Experiment Nr. | Description                                               | Section in thesis |
 |----------------|-----------------------------------------------------------|-------------------|
@@ -75,14 +76,42 @@ Options:
 ````
 e.g. ``python training law-matching --epochs 10 --no-cross-validation --inspect``
 
-## Database
+## Data sets
 
-The SQLite database is called `database.db`. It contains the claim extraction and law matching data. For the data format 
-see [initial_migration.sql](initial_migration.sql) or `sqlite3 database.db -cmd .schema`
+We collected three data sets:
+- Claim Extraction data set
+- Law Matching data set
+- COVID-19-related legislation in Berlin
+### Claim Extraction data set
 
-## Legislation
+The data set for the Claim Extraction data set should be loaded from the database with the `ClaimExtractionDatasets` class:  
+```python
+from training.preprocessing.datasets_ import ClaimExtractionDatasets
+datasets = ClaimExtractionDatasets.load_from_database()
+assert len(datasets.train) == 63
+assert len(datasets.test) == 16
+assert len(list(datasets.folds)) == 5
+```
 
-The legislation text can be found in the [legislation folder](legislation). The json files contain the section with their
+### Law Matching data set
+
+```python
+from training.preprocessing.datasets_ import LawMatchingDatasets
+datasets = LawMatchingDatasets.load_from_database() # for new random negative samples
+datasets = LawMatchingDatasets.load_from_csv('data/law_matching_dataset.csv') # for same samples as in experiments
+assert len(datasets.train) == 686
+assert len(datasets.test) == 172
+assert len(list(datasets.folds)) == 5
+```
+
+### Database
+
+The SQLite database is `data/database.db`. It contains the unprocessed data for Claim Extraction and Law Matching data sets. For the data format 
+see [initial_migration.sql](data/initial_migration.sql) or `sqlite3 data/database.db -cmd .schema`
+
+### Legislation
+
+The legislation text can be found in the [legislation folder](data/legislation). The json files contain the section with their
 respective validity dates. Currently, the following legislation is there:
 - 1\. InfSchMV (from 16.12.2020 to 06.03.2021)
 - 2\. InfSchMV (from 07.03.2021 to 17.06.2021)
@@ -115,10 +144,10 @@ The filename is `{abbreviation}.json`. The format is:
 }
 ```
 
-### Scraping and parsing new legislation
+#### Scraping and parsing new legislation
 For scraping and parsing new legislation from [gesetze.berlin.de](gesetze.berlin.de), their url should be placed in the `law_scraping/data/urls` folder.
 
-#### Scrape
+####  Scrape:
 ``` 
 Usage: law_scraping scrape [OPTIONS]
 
@@ -130,7 +159,7 @@ Options:
 ```
 e.g. `python law_scraping scrape --file-with-urls SchulHygCoV-19-VO.json`
 
-#### Parse
+#### Parse:
 ```
 Usage: law_scraping extract [OPTIONS]
 

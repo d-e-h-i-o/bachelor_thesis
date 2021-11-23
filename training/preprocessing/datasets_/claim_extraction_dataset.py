@@ -41,7 +41,7 @@ class ClaimExtractionDatasets:
         self.X = self.limit_samples_without_claims(self.X)
         self.X = np.array(self.X, dtype=object)
         self.train_split, self.test_split = next(
-            ShuffleSplit(n_splits=1, test_size=0.15, random_state=seed).split(self.X)
+            ShuffleSplit(n_splits=1, test_size=0.20, random_state=seed).split(self.X)
         )
 
     @property
@@ -131,7 +131,7 @@ class ClaimExtractionDatasets:
     @classmethod
     def load_from_database(
         cls,
-        database="/data/experiments/dehio/bachelor_thesis/database.db",
+        database="data/database.db",
         folds=5,
         seed=0,
     ):

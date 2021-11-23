@@ -137,7 +137,9 @@ class LawMatchingDatasets:
         return np.array(samples, dtype=object)
 
     @classmethod
-    def load_from_database(cls, database="database.db", folds=5, for_inspection=False):
+    def load_from_database(
+        cls, database="data/database.db", folds=5, for_inspection=False
+    ):
         connection = sqlite3.connect(database)
         cursor = connection.cursor()
         cursor.execute(
@@ -196,9 +198,7 @@ class LawMatchingDatasets:
                 return reference
 
     @classmethod
-    def load_legislation(
-        cls, path="/data/experiments/dehio/bachelor_thesis/legislation"
-    ):
+    def load_legislation(cls, path="data/legislation"):
         acts = []
         for file_name in os.listdir(path):
             acts.append(Act.from_file(f"{path}/{file_name}"))

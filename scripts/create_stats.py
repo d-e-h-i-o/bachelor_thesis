@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from texttable import Texttable
 import latextable
 
-con = sqlite3.connect("database.db")
+con = sqlite3.connect("data/database.db")
 
 
 def create_claim_stats(dataset_path="results/claim_extraction_12.09.21_0/dataset.csv"):
