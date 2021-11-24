@@ -116,8 +116,8 @@ def run_experiment1(
         "deepset/gelectra-large": [],
         "deepset/gbert-base": [],
         "deepset/gelectra-base": [],
-        "/data/experiments/dehio/germeval2021/experiments/models/d5d3bd2c2ec20360d4e3827411fdfe6e81a7aaf46dcd285c1a8892b4b8b42d63_gbert-large_fact": [],
-        "/data/experiments/dehio/germeval2021/experiments/models/4f975e12f0255e5e185c4f41334c5284e64bea06d7da465bba3c8250da9f4c54_gelectra-large_fact": [],
+        "models/gbert-large-germeval21-fact": [],
+        "models/gelectra-large-germeval21-fact": [],
     }
     for i, (train_set, test_set) in enumerate(datasets.folds):
         for model_checkpoint in results:
