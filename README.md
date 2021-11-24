@@ -91,6 +91,7 @@ datasets = ClaimExtractionDatasets.load_from_database()
 assert len(datasets.train) == 63
 assert len(datasets.test) == 16
 assert len(list(datasets.folds)) == 5
+datasets.save_to_csv('claim_extraction.csv') # for manual inspection
 ```
 
 ### Law Matching data set
@@ -102,6 +103,7 @@ datasets = LawMatchingDatasets.load_from_csv('data/law_matching_dataset.csv') # 
 assert len(datasets.train) == 686
 assert len(datasets.test) == 172
 assert len(list(datasets.folds)) == 5
+datasets.save_to_csv('law_matching.csv') # for manual inspection, or to save data set
 ```
 
 ### Database
