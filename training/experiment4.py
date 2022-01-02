@@ -14,6 +14,7 @@ from transformers import (
     AutoModelForSequenceClassification,
     set_seed,
 )
+from sklearn.metrics import precision_score, recall_score
 
 from preprocessing import Preprocessor
 from preprocessing.datasets_ import LawMatchingDatasets
@@ -96,7 +97,9 @@ def run_experiment4(
             trainer, model = train_law_matching_model(
                 train_set, test_set, args, model_checkpoint, preprocessor, tokenizer
             )
-            result = trainer.evaluate()
+            preds, label_ids, result = trainer.predict(preprocessor(test_set))
+            result["precision"] = precision_score(np.argmax(preds, axis=1), label_ids)
+            result["recall"] = recall_score(np.argmax(preds, axis=1), label_ids)
 
             if model_checkpoint not in results:
                 results[model_checkpoint] = []
