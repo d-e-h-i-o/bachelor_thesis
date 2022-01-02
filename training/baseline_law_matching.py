@@ -6,6 +6,7 @@ from datasets import load_metric
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.metrics import precision_score, recall_score
 
 from preprocessing.datasets_ import LawMatchingDatasets
 from utils import report_results, eval_k_fold
@@ -51,6 +52,8 @@ def calculate_baseline_law_matching(from_file: Optional[str]):
         classifier.fit(x_train, y_train)
         predictions = classifier.predict(x_test)
         result = metric.compute(predictions=predictions, references=y_test)
+        result["precision"] = precision_score(y_test, predictions)
+        result["recall"] = recall_score(y_test, predictions)
         results.append(result)
 
     print(f"Overall results: {eval_k_fold(results)}")
