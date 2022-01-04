@@ -51,7 +51,6 @@ def law_matching(
 def experiment(nr: int):
     if nr == 1:
         run_experiment1()
-        calculate_baseline_law_matching()
     elif nr == 2:
         run_experiment2()
     elif nr == 3:
