@@ -116,8 +116,6 @@ def run_experiment1(
         "deepset/gelectra-large": [],
         "deepset/gbert-base": [],
         "deepset/gelectra-base": [],
-        "models/gbert-large-germeval21-fact": [],
-        "models/gelectra-large-germeval21-fact": [],
     }
     for i, (train_set, test_set) in enumerate(datasets.folds):
         for model_checkpoint in results:
@@ -132,7 +130,7 @@ def run_experiment1(
 
             preprocessor = Preprocessor(tokenizer, "claim_extraction")
             model = AutoModelForTokenClassification.from_pretrained(
-                model_checkpoint, num_labels=3, ignore_mismatched_sizes=True
+                model_checkpoint, num_labels=3, ignore_mismatched_sizes=True, cache_dir="/data/experiments/dehio/cache"
             )
             model_name = model_checkpoint.split("/")[-1]
             args = TrainingArguments(

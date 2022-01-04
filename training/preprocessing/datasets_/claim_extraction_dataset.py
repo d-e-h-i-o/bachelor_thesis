@@ -131,7 +131,7 @@ class ClaimExtractionDatasets:
     @classmethod
     def load_from_database(
         cls,
-        database="data/database.db",
+        database="/data/experiments/dehio/bachelor_thesis/data/database.db",
         folds=5,
         seed=0,
     ):

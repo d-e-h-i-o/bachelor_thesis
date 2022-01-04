@@ -66,7 +66,7 @@ def run_experiment4(
     learning_rate: float = 0.00001,
 ):
     set_seed(0)
-    datasets = LawMatchingDatasets.load_from_csv("data/law_matching.csv")
+    datasets = LawMatchingDatasets.load_from_csv("/data/experiments/dehio/bachelor_thesis/data/law_matching.csv")
 
     if not os.path.isdir(PATH):
         os.mkdir(PATH)
@@ -81,7 +81,7 @@ def run_experiment4(
 
     for i, (train_set, test_set) in enumerate(datasets.folds):
         for model_checkpoint in results.keys():
-            tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+            tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, cache_dir="/data/experiments/dehio/cache")
             preprocessor = Preprocessor(tokenizer, "law_matching")
             args = TrainingArguments(
                 f"/data/experiments/dehio/models/test-law-matching-{randint(0, 100000)}",
