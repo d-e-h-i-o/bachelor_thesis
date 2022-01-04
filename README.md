@@ -24,6 +24,7 @@ cd bachelor_thesis
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+python -m spacy download de_core_news_sm
 ```
 
 ## Experiments
@@ -36,7 +37,8 @@ making the experiments reproducible.
 | 1              | Train & benchmark for Claim Extraction                    | 5.4.1             |
 | 2              | Effect of different fold-composition for Claim Extraction | 5.4.2             |
 | 3              | Visual results for Claim Extraction task                  | 5.4.3             |
-| 4              | Train & benchmark for Law Matching task                   | 6.4.1             |
+| 4              | Train & benchmark models for Law Matching task                   | 6.4.1             |
+| 5              | Train & benchmark baseline for Law Matching task                   | 6.2.2          |
 
 ## Training
 

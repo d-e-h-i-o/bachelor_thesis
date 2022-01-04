@@ -83,3 +83,7 @@ def indices_of_wrong_classifications(test_dataset, classifier):
         f"{(len(x_test) - len(wrong_predictions)) /len(x_test)}",
     )
     return wrong_predictions
+
+
+if __name__ == "__main__":
+    calculate_baseline_law_matching("data/law_matching.csv")

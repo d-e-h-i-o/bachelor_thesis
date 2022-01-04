@@ -57,6 +57,8 @@ def experiment(nr: int):
         run_experiment3()
     elif nr == 4:
         run_experiment4()
+    elif nr == 5:
+        calculate_baseline_law_matching("data/law_matching.csv")
 
 
 @app.command()
